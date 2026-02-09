@@ -104,7 +104,8 @@ class AppSettingsViewModel {
         }
     }
     var electrumCellModel: ElectrumCellModel {
-        return ElectrumCellModel(switchTls: gdkSettings?.electrumTls ?? true,
+        return ElectrumCellModel(testnetIsEnabled: isTestnetOn,
+                                 switchTls: gdkSettings?.electrumTls ?? true,
                                  serverBTC: self.serverBTC ?? "",
                                  serverLiquid: self.serverLiquid ?? "",
                                  serverTestnet: self.serverTestnet ?? "",

@@ -1,15 +1,18 @@
 class ElectrumCellModel {
+    var testnetIsEnabled: Bool
     var switchTls: Bool
     var serverBTC: String
     var serverLiquid: String
     var serverTestnet: String
     var serverLiquidtestnet: String
-    init(switchTls: Bool,
+    init(testnetIsEnabled: Bool,
+         switchTls: Bool,
          serverBTC: String,
          serverLiquid: String,
          serverTestnet: String,
          serverLiquidtestnet: String
     ) {
+        self.testnetIsEnabled = testnetIsEnabled
         self.switchTls = switchTls
         self.serverBTC = serverBTC
         self.serverLiquid = serverLiquid

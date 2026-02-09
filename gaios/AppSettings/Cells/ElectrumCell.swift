@@ -55,11 +55,6 @@ class ElectrumCell: UITableViewCell {
         [bgTls, bgBTC, bgLiquid, bgTestnet, bgLiquidTestnet].forEach {
             $0.setStyle(CardStyle.defaultStyle)
         }
-        if !Bundle.main.dev {
-            [lblTitleTestnet, lblTitleLiquidTestnet, bgTestnet, bgLiquidTestnet].forEach {
-                $0.isHidden = true
-            }
-        }
     }
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
@@ -83,6 +78,9 @@ class ElectrumCell: UITableViewCell {
         self.onChangeLiquid = onChangeLiquid
         self.onChangeTestnet = onChangeTestnet
         self.onChangeLiquidTestnet = onChangeLiquidTestnet
+        [lblTitleTestnet, lblTitleLiquidTestnet, bgTestnet, bgLiquidTestnet].forEach {
+            $0.isHidden = !model.testnetIsEnabled
+        }
     }
     @IBAction func switchTls(_ sender: Any) {
         onSwitchTls?()

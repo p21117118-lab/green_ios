@@ -142,6 +142,7 @@ class AppSettingsViewController: KeyboardViewController {
     }
     func onTestnet() {
         viewModel.isTestnetOn = !viewModel.isTestnetOn
+        reloadSections([.server], animated: false)
     }
     func onExperimental() {
         viewModel.isExperimentalOn = !viewModel.isExperimentalOn
