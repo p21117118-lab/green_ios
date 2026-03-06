@@ -27,6 +27,8 @@ extension LwkError {
             return "No Boltz Update"
         case .ObjectConsumed:
             return "Object Consumed"
+        case .BoltzBackendHttpError(status: let status, error: let error):
+            return "Http error \(status): \(error ?? "")"
         }
     }
 }
