@@ -26,7 +26,7 @@ class WalletTabBarModel {
         self.isRestored = isRestored
         self.walletDataModel = WalletDataModel(wallet: wallet, mainAccount: mainAccount)
         if let lwkSession = wallet.lwkSession {
-            self.wallet.swapMonitor = SwapMonitor(mainAccount: mainAccount, lwkSession: lwkSession)
+            self.wallet.swapMonitor = SwapMonitor(xpubHashId: mainAccount.xpubHashId ?? "", lwkSession: lwkSession)
         }
     }
 

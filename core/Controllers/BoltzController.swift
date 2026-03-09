@@ -88,6 +88,17 @@ public actor BoltzController {
             NSPredicate(format: "swapType == %@", swapType.rawValue)
         ])
     }
+
+    public func dump(xpubHashId: String) async throws {
+        let ids = try await fetchIDs([
+            NSPredicate(format: "xpubHashId == %@", xpubHashId)
+        ])
+        for id in ids {
+            if let swap = try? await get(with: id) {
+                logger.info("LWK \(swap.id ?? "") \(swap.xpubHashId ?? "") \(swap.txHash ?? "")  \(swap.isPending) \(swap.data ?? "")")
+            }
+        }
+    }
     
     /// Fetch ID of 'BoltzSwap' objects by his id.
     public func fetchID(byId id: String) async throws -> NSManagedObjectID? {
@@ -115,16 +126,6 @@ public actor BoltzController {
         // objectWithID: efficiently uses in-memory information or the store as needed
         try await context.perform {
             try self.context.existingObject(with: id) as? BoltzSwap
-        }
-    }
-    public func dump(xpubHashId: String) async throws {
-        let ids = try await fetchIDs([
-            NSPredicate(format: "xpubHashId == %@", xpubHashId)
-        ])
-        for id in ids {
-            if let swap = try? await get(with: id) {
-                logger.info("LWK \(swap.id ?? "") \(swap.xpubHashId ?? "") \(swap.txHash ?? "")  \(swap.isPending) \(swap.data ?? "")")
-            }
         }
     }
 

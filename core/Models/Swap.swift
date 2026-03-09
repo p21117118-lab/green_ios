@@ -11,7 +11,7 @@ public enum SwapResponse {
     case reverseSubmarine(InvoiceResponse)
     case chain(LockupResponse)
 
-    func swapId() throws -> String {
+    public func swapId() throws -> String {
         switch self {
         case .submarine(let preparePayResponse):
             try preparePayResponse.swapId()
@@ -21,7 +21,7 @@ public enum SwapResponse {
             try lockupResponse.swapId()
         }
     }
-    func serialize() throws -> String {
+    public func serialize() throws -> String {
         switch self {
         case .submarine(let preparePayResponse):
             try preparePayResponse.serialize()
@@ -31,7 +31,7 @@ public enum SwapResponse {
             try lockupResponse.serialize()
         }
     }
-    func advance() throws -> PaymentState {
+    public func advance() throws -> PaymentState {
         switch self {
         case .submarine(let preparePayResponse):
             try preparePayResponse.advance()
@@ -42,4 +42,3 @@ public enum SwapResponse {
         }
     }
 }
-

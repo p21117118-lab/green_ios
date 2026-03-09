@@ -11,15 +11,25 @@ public class LwkSessionManager: SessionManager {
     var network = Network.mainnet()
     public var boltzSession: BoltzSession?
     var xpubHashId: String?
+    private var client: AnyClient?
 
-    public init(network: Network = Network.mainnet(), boltzSession: BoltzSession? = nil, xpubHashId: String? = nil, newNotificationDelegate: NewNotificationDelegate?) {
+    public init(
+        network: Network = Network.mainnet(),
+        boltzSession: BoltzSession? = nil,
+        xpubHashId: String? = nil,
+        client: AnyClient? = nil,
+        newNotificationDelegate: NewNotificationDelegate?) {
         super.init(NetworkSecurityCase.lwkMainnet, newNotificationDelegate: newNotificationDelegate)
         self.network = network
         self.boltzSession = boltzSession
         self.xpubHashId = xpubHashId
+        self.client = client
         self.session = GDKSession()
     }
-
+    public override func connect() async { }
+    public override func disconnect() async {
+        boltzSession = nil
+    }
     public override func reconnect() async { }
     public override func networkConnect() async { }
     public override func networkDisconnect() async { }
@@ -40,22 +50,27 @@ public class LwkSessionManager: SessionManager {
         guard let secret = params.mnemonic else {
             throw LwkError.Generic(msg: "Invalid mnemonic")
         }
-        do {
-            let client = try network.defaultElectrumClient()
-            boltzSession = try createBoltzSession(
-                client: AnyClient.fromElectrum(client: client),
-                mnemonic: try Mnemonic(s: secret))
-        } catch {
-            let client = try network.defaultEsploraClient()
-            boltzSession = try createBoltzSession(
-                client: AnyClient.fromEsplora(client: client),
-                mnemonic: try Mnemonic(s: secret))
+        if client == nil {
+            client = try getClient()
         }
+        boltzSession = try createBoltzSession(
+            client: client!,
+            mnemonic: try Mnemonic(s: secret))
         logged = true
         guard let walletHash = try walletIdentifier(credentials: params) else {
             throw LwkError.Generic(msg: "Invalid wallet hash")
         }
         return LoginUserResult(xpubHashId: walletHash.xpubHashId, walletHashId: walletHash.walletHashId)
+    }
+    
+    func getClient() throws -> AnyClient {
+        do {
+            let client = try network.defaultElectrumClient()
+            return AnyClient.fromElectrum(client: client)
+        } catch {
+            let esploraClient = try network.defaultEsploraClient()
+            return AnyClient.fromEsplora(client: esploraClient)
+        }
     }
     
     func createBoltzSession(client: AnyClient, mnemonic: Mnemonic) throws -> BoltzSession {

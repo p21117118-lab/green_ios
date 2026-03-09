@@ -533,7 +533,7 @@
 		811006E12199C5BF00D14414 /* UIErrorLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 811006E02199C5BF00D14414 /* UIErrorLabel.swift */; };
 		8114888B2B77F1B7004C7AB6 /* GoogleService-Dev-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8114888A2B77F1B7004C7AB6 /* GoogleService-Dev-Info.plist */; };
 		8114888E2B785A27004C7AB6 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 8114888D2B785A27004C7AB6 /* FirebaseMessaging */; };
-		811931F72EB9A08A00AD21D4 /* LwkSwapTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 811931F62EB9A08A00AD21D4 /* LwkSwapTask.swift */; };
+		811931F72EB9A08A00AD21D4 /* SwapTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 811931F62EB9A08A00AD21D4 /* SwapTask.swift */; };
 		81196E9D2B739F7900537A6E /* CBOR.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81196E9C2B739F7900537A6E /* CBOR.swift */; };
 		811EFD8E21A719FC0006EA8C /* KeyboardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 811EFD8D21A719FC0006EA8C /* KeyboardViewController.swift */; };
 		811FB34A2DDEB634002FFFB7 /* LTExportJadeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 811FB3492DDEB62A002FFFB7 /* LTExportJadeViewModel.swift */; };
@@ -584,6 +584,8 @@
 		8153AD292CECB7600030CE8F /* Meld.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8153AD282CECB75B0030CE8F /* Meld.swift */; };
 		8153AD2B2CEF21FA0030CE8F /* CreateAccountCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8153AD2A2CEF21F60030CE8F /* CreateAccountCell.swift */; };
 		8153AD2D2CEF24880030CE8F /* CreateAccountCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8153AD2C2CEF24880030CE8F /* CreateAccountCell.xib */; };
+		815D63A42F6426FC000A4CD7 /* SwapManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 815D63A32F6426E9000A4CD7 /* SwapManager.swift */; };
+		815D63A62F642713000A4CD7 /* SwapModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 815D63A52F64270F000A4CD7 /* SwapModel.swift */; };
 		815FE0802F36615600AAAE8F /* Swap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 815FE07F2F36614E00AAAE8F /* Swap.swift */; };
 		816184582A3B0DD1007D6569 /* BleJadeConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 816184572A3B0DD1007D6569 /* BleJadeConnection.swift */; };
 		8161845D2A3B6467007D6569 /* AnyPublisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8161845C2A3B6467007D6569 /* AnyPublisher.swift */; };
@@ -1558,7 +1560,7 @@
 		810F514C2F20B12300A98B44 /* SendAccountAssetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendAccountAssetViewController.swift; sourceTree = "<group>"; };
 		811006E02199C5BF00D14414 /* UIErrorLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIErrorLabel.swift; sourceTree = "<group>"; };
 		8114888A2B77F1B7004C7AB6 /* GoogleService-Dev-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Dev-Info.plist"; sourceTree = "<group>"; };
-		811931F62EB9A08A00AD21D4 /* LwkSwapTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LwkSwapTask.swift; sourceTree = "<group>"; };
+		811931F62EB9A08A00AD21D4 /* SwapTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwapTask.swift; sourceTree = "<group>"; };
 		81196E9C2B739F7900537A6E /* CBOR.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CBOR.swift; sourceTree = "<group>"; };
 		811ED52821BF59C30033A4A1 /* TwoFactorConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwoFactorConfig.swift; sourceTree = "<group>"; };
 		811EFD8D21A719FC0006EA8C /* KeyboardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardViewController.swift; sourceTree = "<group>"; };
@@ -1616,6 +1618,8 @@
 		815A804529B3D4B600269027 /* KeychainStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainStorage.swift; sourceTree = "<group>"; };
 		815A804729B6443F00269027 /* WalletsRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletsRepository.swift; sourceTree = "<group>"; };
 		815D4A9F28638A56004DC015 /* PinData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinData.swift; sourceTree = "<group>"; };
+		815D63A32F6426E9000A4CD7 /* SwapManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwapManager.swift; sourceTree = "<group>"; };
+		815D63A52F64270F000A4CD7 /* SwapModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwapModel.swift; sourceTree = "<group>"; };
 		815FE07F2F36614E00AAAE8F /* Swap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Swap.swift; sourceTree = "<group>"; };
 		816184572A3B0DD1007D6569 /* BleJadeConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BleJadeConnection.swift; sourceTree = "<group>"; };
 		8161845C2A3B6467007D6569 /* AnyPublisher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyPublisher.swift; sourceTree = "<group>"; };
@@ -3890,6 +3894,16 @@
 			path = Repository;
 			sourceTree = "<group>";
 		};
+		815D63A22F6426DA000A4CD7 /* Swap */ = {
+			isa = PBXGroup;
+			children = (
+				815D63A52F64270F000A4CD7 /* SwapModel.swift */,
+				815D63A32F6426E9000A4CD7 /* SwapManager.swift */,
+				811931F62EB9A08A00AD21D4 /* SwapTask.swift */,
+			);
+			path = Swap;
+			sourceTree = "<group>";
+		};
 		8161845E2A3B6CDF007D6569 /* Wait */ = {
 			isa = PBXGroup;
 			children = (
@@ -4008,9 +4022,9 @@
 		8177EDB12B6C743B00C2271C /* Tasks */ = {
 			isa = PBXGroup;
 			children = (
+				815D63A22F6426DA000A4CD7 /* Swap */,
 				2096C07A2DCFB22E000E3E0F /* MeldTypes.swift */,
 				201BF8912DCFA4AD003A9383 /* MeldTransactionTask.swift */,
-				811931F62EB9A08A00AD21D4 /* LwkSwapTask.swift */,
 				8177ED482B6C567100C2271C /* PaymentReceiverTask.swift */,
 				8180B2482D2D742A008FFFD0 /* SwapUpdateTask.swift */,
 				81F8AC562BC5A4A4002E384D /* ConfirmTransactionTask.swift */,
@@ -5731,10 +5745,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				8177EDB02B6C742700C2271C /* PaymentReceiverTask.swift in Sources */,
+				815D63A62F642713000A4CD7 /* SwapModel.swift in Sources */,
 				2096C07B2DCFB22E000E3E0F /* MeldTypes.swift in Sources */,
 				81F8AC552BC56F5D002E384D /* NotificationService.swift in Sources */,
 				81F8AC572BC5A4A4002E384D /* ConfirmTransactionTask.swift in Sources */,
-				811931F72EB9A08A00AD21D4 /* LwkSwapTask.swift in Sources */,
+				811931F72EB9A08A00AD21D4 /* SwapTask.swift in Sources */,
+				815D63A42F6426FC000A4CD7 /* SwapManager.swift in Sources */,
 				816E9BD82BC48011008DBFA7 /* BreezSDKConnector.swift in Sources */,
 				8180B2492D2D742A008FFFD0 /* SwapUpdateTask.swift in Sources */,
 				81F8AC592BC5A4F4002E384D /* TaskProtocol.swift in Sources */,

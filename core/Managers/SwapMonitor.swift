@@ -4,22 +4,12 @@ import LiquidWalletKit
 
 public actor SwapMonitor {
 
-    private let mainAccount: Account
+    private let xpubHashId: String
     private let lwkSession: LwkSessionManager
-
     private var activeTasks: [NSManagedObjectID: Task<Void, Never>] = [:]
 
-    private var xpubHashId: String {
-        get throws {
-            guard let xpubHashId = mainAccount.xpubHashId else {
-                throw LwkError.Generic(msg: "No xpub found")
-            }
-            return xpubHashId
-        }
-    }
-
-    public init(mainAccount: Account, lwkSession: LwkSessionManager) {
-        self.mainAccount = mainAccount
+    public init(xpubHashId: String, lwkSession: LwkSessionManager) {
+        self.xpubHashId = xpubHashId
         self.lwkSession = lwkSession
     }
 
@@ -93,6 +83,46 @@ public actor SwapMonitor {
         }
     }
 
+    
+    nonisolated public func handleSingleSwap(persistentId: NSManagedObjectID, swap: SwapResponse) async throws -> PaymentState {
+        let swapId = try swap.swapId()
+        do {
+            let state = try swap.advance()
+            switch state {
+            case .continue:
+                let data = try swap.serialize()
+                logger.info("LWK \(swapId, privacy: .public) updated with \(data.prefix(64), privacy: .public)")
+                _ = try await BoltzController.shared.update(with: persistentId, newData: data, newIsPending: true)
+                try await Task.sleep(nanoseconds: 100_000_000)
+            case .success:
+                logger.info("LWK \(swapId, privacy: .public) completed successfully!")
+                _ = try await BoltzController.shared.update(with: persistentId, newIsPending: false)
+            case .failed:
+                logger.info("LWK \(swapId, privacy: .public) failed!")
+                _ = try await BoltzController.shared.update(with: persistentId, newIsPending: false)
+                //_ = try await BoltzController.shared.delete(with: persistentId)
+            }
+            return state
+        } catch LwkError.NoBoltzUpdate {
+            try await Task.sleep(nanoseconds: 1_000_000_000)
+            if let swap = try? await BoltzController.shared.get(with: persistentId) {
+                return swap.isPending ? PaymentState.continue : PaymentState.success
+            } else {
+                return .failed
+            }
+        } catch LwkError.ObjectConsumed {
+            logger.error("LWK \(swapId, privacy: .public) object consumed")
+            //_ = try? await BoltzController.shared.delete(with: persistentId)
+            //_ = try await BoltzController.shared.update(with: persistentId, newIsPending: false)
+            return .failed
+        } catch {
+            logger.error("LWK \(swapId, privacy: .public) unrecoverable error: \(error.localizedDescription, privacy: .public)")
+            //_ = try? await BoltzController.shared.delete(with: persistentId)
+            //_ = try await BoltzController.shared.update(with: persistentId, newIsPending: false)
+            return .failed
+        }
+    }
+
     nonisolated public func loopSwap(swap: SwapResponse) async throws -> PaymentState {
         let swapId = try swap.swapId()
         let persistentId = try? await BoltzController.shared.fetchID(byId: swapId)
@@ -102,41 +132,9 @@ public actor SwapMonitor {
         }
         var state = PaymentState.continue
         repeat {
-            do {
-                state = try swap.advance()
-                switch state {
-                case .continue:
-                    let data = try swap.serialize()
-                    logger.info("LWK \(swapId, privacy: .public) updated with \(data.prefix(64), privacy: .public)")
-                    _ = try await BoltzController.shared.update(with: persistentId, newData: data, newIsPending: true)
-                    try await Task.sleep(nanoseconds: 100_000_000)
-                case .success:
-                    logger.info("LWK \(swapId, privacy: .public) completed successfully!")
-                    _ = try await BoltzController.shared.update(with: persistentId, newIsPending: false)
-                case .failed:
-                    logger.info("LWK \(swapId, privacy: .public) failed!")
-                    _ = try await BoltzController.shared.update(with: persistentId, newIsPending: false)
-                    //_ = try await BoltzController.shared.delete(with: persistentId)
-                }
-            } catch LwkError.NoBoltzUpdate {
-                try await Task.sleep(nanoseconds: 1_000_000_000)
-                if let swap = try? await BoltzController.shared.get(with: persistentId) {
-                    state = swap.isPending ? PaymentState.continue : PaymentState.success
-                } else {
-                    state = .failed
-                }
-            } catch LwkError.ObjectConsumed {
-                logger.error("LWK \(swapId, privacy: .public) object consumed")
-                //_ = try? await BoltzController.shared.delete(with: persistentId)
-                _ = try await BoltzController.shared.update(with: persistentId, newIsPending: false)
-                state = .failed
-            } catch {
-                logger.error("LWK \(swapId, privacy: .public) unrecoverable error: \(error.localizedDescription, privacy: .public)")
-                //_ = try? await BoltzController.shared.delete(with: persistentId)
-                _ = try await BoltzController.shared.update(with: persistentId, newIsPending: false)
-                state = .failed
-            }
-        } while state == PaymentState.continue
+            try Task.checkCancellation()
+            state = try await self.handleSingleSwap(persistentId: persistentId, swap: swap)
+        } while state == PaymentState.continue && !Task.isCancelled
         return state
     }
 }
