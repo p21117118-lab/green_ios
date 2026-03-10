@@ -151,6 +151,9 @@ extension JadeBoltzExportViewController: DialogScanViewControllerDelegate {
 }
 extension JadeBoltzExportViewController: DialogSwapJadeEnabledViewControllerDelegate {
     func onSwapEnabledDone() {
+        Task.detached { [weak viewModel] in
+            try await viewModel?.startSwapMonitor()
+        }
         delegate?.onExportSucceed()
     }
 }

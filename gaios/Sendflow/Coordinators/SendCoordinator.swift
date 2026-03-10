@@ -555,7 +555,7 @@ extension SendCoordinator: SendLwkSignViewModelDelegate {
                 try? await BoltzController.shared.update(with: persistentId, newTxHash: sendTransactionSuccess.txHash)
             } else if let invoice = try? vm.bolt11.description {
                 // used magic routing to pay the invoice
-                _ = try? await BoltzController.shared.create(id: nil, data: nil, isPending: false, xpubHashId: xpubHashId, invoice: invoice, swapType: .submarineSwap, txHash: sendTransactionSuccess.txHash)
+                _ = try? await BoltzController.shared.create(id: String.random(length: 12), data: nil, isPending: false, xpubHashId: xpubHashId, invoice: invoice, swapType: .submarineSwap, txHash: sendTransactionSuccess.txHash)
             }
             return sendTransactionSuccess
         }

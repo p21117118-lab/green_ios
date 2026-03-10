@@ -35,7 +35,7 @@ class WalletTabBarModel {
             await walletDataModel.shutdown()
         }
     }
-    
+
     @MainActor func tabTransactVC() -> TabTransactVC {
         let storyboard = UIStoryboard(name: "WalletTab", bundle: nil)
         let viewModel = TabTransactVM(walletDataModel: walletDataModel, wallet: wallet, mainAccount: mainAccount)
@@ -85,7 +85,22 @@ class WalletTabBarModel {
             _ = lightningSession.lightBridge?.updateLspInformation()
         }
     }
-
+    func startSwapMonitor() async throws {
+        if isRestored {
+            let liquidAddress = await getAddress(subaccount: wallet.liquidSubaccounts.first)
+            let bitcoinAddress = await getAddress(subaccount: wallet.bitcoinSubaccounts.first)
+            if let liquidAddress, let bitcoinAddress {
+                try? await wallet.swapMonitor?.restoreSwaps(bitcoinAddress: bitcoinAddress, liquidAddress: liquidAddress)
+            }
+        }
+        try await wallet.swapMonitor?.start()
+    }
+    func getAddress(subaccount: WalletItem?) async -> String? {
+        guard let subaccount else { return nil }
+        let session = wallet.getSession(for: subaccount)
+        let address = try? await session?.getReceiveAddress(subaccount: subaccount.pointer)
+        return address?.address
+    }
     func callAnalytics() {
         if analyticsDone == true { return }
         analyticsDone = true

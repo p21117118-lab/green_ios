@@ -66,4 +66,20 @@ class JadeBoltzExportViewModel {
     nonisolated func request(session: SessionManager) async throws -> (Data?, BcurEncodedData?) {
         return try await session.jadeBip8539Request(index: LwkSessionManager.BOLTZ_BIP85_INDEX)
     }
+
+    nonisolated func startSwapMonitor() async throws {
+            let liquidAddress = await getAddress(subaccount: wm.liquidSubaccounts.first)
+            let bitcoinAddress = await getAddress(subaccount: wm.bitcoinSubaccounts.first)
+            if let liquidAddress, let bitcoinAddress {
+                try? await wm.swapMonitor?.restoreSwaps(bitcoinAddress: bitcoinAddress, liquidAddress: liquidAddress)
+            }
+        try await wm.swapMonitor?.start()
+    }
+
+    nonisolated func getAddress(subaccount: WalletItem?) async -> String? {
+        guard let subaccount else { return nil }
+        let session = wm.getSession(for: subaccount)
+        let address = try? await session?.getReceiveAddress(subaccount: subaccount.pointer)
+        return address?.address
+    }
 }

@@ -327,7 +327,7 @@ public class SessionManager {
         }
         throw GaError.GenericError()
     }
-    
+
     func wrapper<T: Codable, K: Codable>(
         fun: GdkFunc?,
         params: T,

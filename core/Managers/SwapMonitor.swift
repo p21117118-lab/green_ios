@@ -9,6 +9,15 @@ public actor SwapMonitor {
 
     private var activeTasks: [NSManagedObjectID: Task<Void, Never>] = [:]
 
+    private var xpubHashId: String {
+        get throws {
+            guard let xpubHashId = mainAccount.xpubHashId else {
+                throw LwkError.Generic(msg: "No xpub found")
+            }
+            return xpubHashId
+        }
+    }
+
     public init(mainAccount: Account, lwkSession: LwkSessionManager) {
         self.mainAccount = mainAccount
         self.lwkSession = lwkSession
@@ -19,11 +28,19 @@ public actor SwapMonitor {
     }
 
     /// Called on wallet login to resume pending work
-    public func bootstrap() async throws {
+    public func start() async throws {
         let pendingIDs = try await getPendingSwaps()
         for swapId in pendingIDs {
             await monitorSwap(id: swapId)
         }
+    }
+
+    /// Called on restore wallet before wallet login to restore swaps, do before bootstrap()
+    public func restoreSwaps(bitcoinAddress: String, liquidAddress: String) async throws {
+        try await lwkSession.restoreSwaps(
+            bitcoinAddress: bitcoinAddress,
+            liquidAddress: liquidAddress,
+            xpubHashId: xpubHashId)
     }
 
     public func monitorSwap(id: NSManagedObjectID) async {
@@ -43,7 +60,7 @@ public actor SwapMonitor {
     }
 
     private func getPendingSwaps() async throws -> [NSManagedObjectID] {
-        try await BoltzController.shared.fetchPendingSwaps(xpubHashId: mainAccount.xpubHashId ?? "")
+        try await BoltzController.shared.fetchPendingSwaps(xpubHashId: xpubHashId)
     }
 
     private func getPendingSwap(id: NSManagedObjectID) async throws -> BoltzSwap? {

@@ -34,7 +34,6 @@ class WalletTabBarViewController: UITabBarController {
         super.viewDidLoad()
         setTabBar()
         AppNotifications.shared.checkNotificationStatusAndPromptIfNeeded(from: self)
-        
         Task.detached { [weak self] in
             await self?.setupRemoteNotifications()
         }
@@ -42,7 +41,7 @@ class WalletTabBarViewController: UITabBarController {
             await self?.walletTabBarModel.callAnalytics()
         }
         Task.detached { [weak self] in
-            try await self?.wallet.swapMonitor?.bootstrap()
+            try await self?.walletTabBarModel.startSwapMonitor()
         }
     }
 
