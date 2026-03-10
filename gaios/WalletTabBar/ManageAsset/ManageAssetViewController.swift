@@ -300,7 +300,7 @@ extension ManageAssetViewController: UITableViewDelegate, UITableViewDataSource 
                 cell.configure(onBuy: viewModel.isBTCAsset ? self.buy : nil,
                                onSend: self.send,
                                onReceive: self.receive,
-                               onSwap: viewModel.mainAccount.isWatchonly ? nil : self.swap,
+                               onSwap: viewModel.canSwap() ? self.swap : nil,
                 )
                 cell.selectionStyle = .none
                 return cell

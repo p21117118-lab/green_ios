@@ -13,6 +13,7 @@ enum SendFlowError: Error, Sendable, Equatable {
     case gdkError(String)
     case lwkError(LwkError)
     case serviceUnavailable
+    case unsupportedInJadeCore
 
     func description() -> String {
         switch self {
@@ -40,6 +41,8 @@ enum SendFlowError: Error, Sendable, Equatable {
             return msg.localized
         case .lwkError(let lwkError):
             return lwkError.description().localized
+        case .unsupportedInJadeCore:
+            return "Swaps are not enabled for this wallet".localized
         }
     }
 }

@@ -28,7 +28,22 @@ struct ZendeskErrorRequest {
 
     var hw: String? {
         let account = AccountsRepository.shared.current
-        return account?.isJade ?? false ? "jade" : account?.isLedger ?? false ? "ledger_nano_x" : nil
+        if account?.isLedger ?? false {
+            return "ledger_nano_x"
+        } else if account?.isJade ?? false {
+            switch account?.boardType {
+            case .v1, .v1_1:
+                return "jade_classic"
+            case .v2:
+                return "jade_plus"
+            case .v2c:
+                return "jade_core"
+            default:
+                return "jade"
+            }
+        } else {
+            return nil
+        }
     }
     var subject: String? {
         if type == .feedback {

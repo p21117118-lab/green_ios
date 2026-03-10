@@ -91,4 +91,10 @@ class TabTransactVM: TabViewModel {
     func hideBalance(_ value: Bool) async throws {
         try await walletDataModel.hideBalance(value)
     }
+    func canSwap() -> Bool {
+        if mainAccount.isWatchonly || (mainAccount.isHW && mainAccount.boardType == .v2c) {
+            return false
+        }
+        return true
+    }
 }

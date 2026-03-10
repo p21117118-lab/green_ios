@@ -123,7 +123,7 @@ class ScanViewController: HWFlowBaseViewController {
     func setContent() {
         title = "id_devices".localized
         btnTroubleshoot.setTitle("id_troubleshoot".localized, for: .normal)
-        btnConnectQr.setTitle("id_connect_via_qr".localized, for: .normal)
+        btnConnectQr.setTitle("Connect via QR (Plus & Classic only)".localized, for: .normal)
         btnTroubleshoot.isHidden = deviceType != .Jade
     }
 

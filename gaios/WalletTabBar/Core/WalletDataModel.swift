@@ -378,7 +378,7 @@ actor WalletDataModel {
             accountItems += [.twoFactorAuthication, .pgpKey]
         }
         accountItems += [.watchOnly, .archievedAccounts, .createAccount]
-        if !wallet.isEphemeral && mainAccount.isHW && !mainAccount.isWatchonly {
+        if !wallet.isEphemeral && (mainAccount.isHW && mainAccount.boardType != .v2c) && !mainAccount.isWatchonly {
             accountItems += [.swaps]
         }
         if !wallet.isEphemeral && !mainAccount.isWatchonly && mainAccount.hasBoltzKey {

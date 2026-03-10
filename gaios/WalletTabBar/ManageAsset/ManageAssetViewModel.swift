@@ -160,4 +160,10 @@ class ManageAssetViewModel {
     func currency() -> String? {
         wallet.prominentSession?.settings?.pricing["currency"]
     }
+    func canSwap() -> Bool {
+        if mainAccount.isWatchonly || (mainAccount.isHW && mainAccount.boardType == .v2c) {
+            return false
+        }
+        return true
+    }
 }

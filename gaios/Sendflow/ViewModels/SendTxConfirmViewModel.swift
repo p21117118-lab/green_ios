@@ -290,7 +290,10 @@ class SendTxConfirmViewModel {
     }
 
     func showSignTransactionViaQR() -> Bool {
-        wm?.isWatchonly ?? false && [.bitcoinSS, .testnetSS].contains(session?.networkType) && txType != .sweep && !importSignedPsbt
+        if mainAccount?.isHW ?? false && mainAccount?.boardType == .v2c {
+            return false
+        }
+        return wm?.isWatchonly ?? false && [.bitcoinSS, .testnetSS].contains(session?.networkType) && txType != .sweep && !importSignedPsbt
     }
 
     func showSignTransaction() -> Bool {

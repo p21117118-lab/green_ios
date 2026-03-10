@@ -3,10 +3,15 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [Unreleased]
+
+### Added
+- Add Jade Core device support
+
 ## [5.2.1] - 2026-03-17
 
 ### Added
-- Added swap Id to transaction details
+- Added swap Id to transaction details 
 - Rescan swaps in settings
 
 ### Changed

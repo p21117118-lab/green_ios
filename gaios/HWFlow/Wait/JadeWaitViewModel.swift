@@ -20,7 +20,7 @@ class JadeWaitViewModel {
             JadeWaitStep(riveModel: RiveModel.animationSideBtns,
                          titleStep: "id_step".localized.uppercased() + " 1",
                          title: "id_power_on_jade".localized,
-                         hint: "id_hold_the_button_on_the_bottom".localized,
+                         hint: "Hold the button until Jade turns on. (For Jade Core, plug in the provided USB-C cable.)".localized,
                          placeholderName: "il_jade_ph_1_power_on"),
             JadeWaitStep(riveModel: RiveModel.animationFrontBtn,
                          titleStep: "id_step".localized.uppercased() + " 2",

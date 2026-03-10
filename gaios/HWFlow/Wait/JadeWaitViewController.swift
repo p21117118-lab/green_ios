@@ -166,7 +166,7 @@ class JadeWaitViewController: HWFlowBaseViewController {
 
     func setContent() {
         lblLoading.text = "id_looking_for_device".localized
-        btnConnectWithQr.setTitle("id_connect_via_qr".localized, for: .normal)
+        btnConnectWithQr.setTitle("Connect via QR (Plus & Classic only)".localized, for: .normal)
     }
 
     func refresh() {

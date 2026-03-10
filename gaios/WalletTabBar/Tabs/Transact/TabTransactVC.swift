@@ -188,7 +188,7 @@ extension TabTransactVC: UITableViewDelegate, UITableViewDataSource {
                     onBuy: self.buy,
                     onSend: self.send,
                     onReceive: self.receive,
-                    onSwap: viewModel.mainAccount.isWatchonly ? nil : self.swapScreen)
+                    onSwap: viewModel.canSwap() ? self.swapScreen : nil)
                 cell.selectionStyle = .none
                 return cell
             }

@@ -44,7 +44,14 @@ final class SendAddressViewModel: Sendable {
         self.mainAccount = mainAccount
         self.parser = PaymentTargetParser(mainAccount: mainAccount)
     }
-
+    func isJadeCore() -> Bool {
+        if self.mainAccount.isJade {
+            if self.mainAccount.boardType == .v2c {
+                return true
+            }
+        }
+        return false
+    }
     func validate(text: String) async {
         error = nil
         paymentTarget = nil
@@ -54,9 +61,19 @@ final class SendAddressViewModel: Sendable {
         let task = Task { try await parser.parse(text) }
         switch await task.result {
         case .success(let type):
+            switch type {
+            case .lightningInvoice:
+                if isJadeCore() {
+                    delegate?.sendAddressViewModel(self, didFailWith: SendFlowError.unsupportedInJadeCore)
+                    onStateChanged?()
+                    return
+                }
+            default:
+                break
+            }
             paymentTarget = type
             canContinue = true
-            delegate?.sendAddressViewModel(self, paymentTarget: type, subaccount: subaccount, assetId: assetId)
+            delegate?.sendAddressViewModel(self, paymentTarget: type, subaccount: subaccount, assetId: assetId)            
         case .failure(let error):
             if let error = error as? SendFlowError {
                 delegate?.sendAddressViewModel(self, didFailWith: error)
