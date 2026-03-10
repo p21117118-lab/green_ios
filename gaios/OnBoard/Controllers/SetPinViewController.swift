@@ -233,13 +233,13 @@ class SetPinViewController: UIViewController {
                 if let account = accountWallet?.0 {
                     AccountsRepository.shared.current = account
                     AnalyticsManager.shared.activeWalletStart()
-                    AccountNavigator.navLogged(accountId: account.id, isFirstLoad: false)
+                    AccountNavigator.navLogged(accountId: account.id, isCreated: false, isRestored: true)
                 }
             case .create:
                 if let account = accountWallet?.0 {
                     AccountsRepository.shared.current = account
                     AnalyticsManager.shared.activeWalletStart()
-                    AccountNavigator.navLogged(accountId: account.id, isFirstLoad: true)
+                    AccountNavigator.navLogged(accountId: account.id, isCreated: true, isRestored: false)
                 }
             case .backup:
                 let storyboard = UIStoryboard(name: "Recovery", bundle: nil)

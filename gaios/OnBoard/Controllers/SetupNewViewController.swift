@@ -103,7 +103,7 @@ class SetupNewViewController: UIViewController {
             stopLoader()
             if let account = accountWallet?.0 {
                 AccountsRepository.shared.current = account
-                AccountNavigator.navLogged(accountId: account.id, isFirstLoad: true)
+                AccountNavigator.navLogged(accountId: account.id, isCreated: true, isRestored: false)
             }
         case .failure(let err):
             stopLoader()

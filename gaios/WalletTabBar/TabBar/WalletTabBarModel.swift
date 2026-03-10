@@ -13,15 +13,17 @@ class WalletTabBarModel {
 
     var wallet: WalletManager
     var mainAccount: Account
-    var isFirstLoad: Bool
+    var isCreated: Bool
+    var isRestored: Bool
     var securityState = SecurityState.alerted
     var walletDataModel: WalletDataModel
     private var analyticsDone = false
 
-    init(wallet: WalletManager, mainAccount: Account, isFirstLoad: Bool) {
+    init(wallet: WalletManager, mainAccount: Account, isCreated: Bool, isRestored: Bool) {
         self.wallet = wallet
         self.mainAccount = mainAccount
-        self.isFirstLoad = isFirstLoad
+        self.isCreated = isCreated
+        self.isRestored = isRestored
         self.walletDataModel = WalletDataModel(wallet: wallet, mainAccount: mainAccount)
         if let lwkSession = wallet.lwkSession {
             self.wallet.swapMonitor = SwapMonitor(mainAccount: mainAccount, lwkSession: lwkSession)

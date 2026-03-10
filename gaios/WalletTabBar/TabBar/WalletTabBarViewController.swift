@@ -68,10 +68,10 @@ class WalletTabBarViewController: UITabBarController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.isNavigationBarHidden = true
-        if walletTabBarModel.isFirstLoad {
+        if walletTabBarModel.isCreated {
             // moved this reset in model
             // after discovery completes
-            walletTabBarModel.isFirstLoad = false
+            walletTabBarModel.isCreated = false
             // load welcome dialog
             addWelcomeDialog()
             // load backup alert
