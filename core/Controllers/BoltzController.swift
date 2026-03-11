@@ -161,4 +161,11 @@ public actor BoltzController {
             }
         }
     }
+    public func getSwap(txHash: String) async throws -> BoltzSwap? {
+        let ids: [NSManagedObjectID] = try await fetchIDs([
+            NSPredicate(format: "txHash == %@", txHash)
+          ])
+        guard let swapId = ids.first else { return nil }
+        return try await get(with: swapId)
+    }
 }

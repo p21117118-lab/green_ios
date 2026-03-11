@@ -16,7 +16,7 @@ class TxDetailsViewModel {
     var wallet: WalletItem
     var transaction: Transaction
     var assetAmountList: AssetAmountList
-
+    var swapId: String?
     var cells = ["TxDetailsStatusCell", "TxDetailsAmountCell", "TxDetailsMultiAmountCell",
                  "TxDetailsActionCell", "TxDetailsInfoCell", "TxDetailsTotalsCell"]
 
@@ -187,7 +187,12 @@ class TxDetailsViewModel {
                                                 type: .plaintext,
                                                 hideBalance: hideBalance))
         }
-
+        if swapId != nil {
+            items.append(TxDetailsInfoCellModel(title: "Swap Id".localized,
+                                                hint: swapId ?? "",
+                                                type: .swapId,
+                                                hideBalance: hideBalance))
+        }
         return items
     }
 
@@ -271,5 +276,10 @@ class TxDetailsViewModel {
             return nil
         }
     }
-
+    func getSwap() async throws -> BoltzSwap? {
+        guard let hash = transaction.hash else {
+            return nil
+        }
+        return try await BoltzController.shared.getSwap(txHash: hash)
+    }
 }

@@ -10,6 +10,7 @@ enum TxDetailsInfoType {
     case message
     case url
     case plaintext
+    case swapId
 }
 
 class TxDetailsInfoCellModel {

@@ -66,7 +66,14 @@ class TxDetailsViewController: UIViewController {
         navBarSetup()
 
         AnalyticsManager.shared.recordView(.transactionDetails, sgmt: AnalyticsManager.shared.sessSgmt(AccountsRepository.shared.current))
-
+        Task { [weak self] in
+            if let swap = try? await self?.vm.getSwap() {
+                await MainActor.run {
+                    self?.vm.swapId = swap.id
+                    self?.tableView.reloadData()
+                }
+            }
+        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -297,14 +304,16 @@ class TxDetailsViewController: UIViewController {
     func didSelectInfoAt(_ index: Int) {
         let m: TxDetailsInfoCellModel = vm.txDetailsInfoCellModels[index]
         let txInfo = m.type
+        UIPasteboard.general.string = m.hint
         switch txInfo {
         case .address, .txId:
-            UIPasteboard.general.string = m.hint
             DropAlert().info(message: m.title, delay: 1.0)
-            UINotificationFeedbackGenerator().notificationOccurred(.success)
+        case .swapId:
+            DropAlert().info(message: "id_copied_to_clipboard".localized, delay: 1.0)
         default:
             break
         }
+        UINotificationFeedbackGenerator().notificationOccurred(.success)
     }
 
     func didSelectAmountAt(_ index: Int) {
