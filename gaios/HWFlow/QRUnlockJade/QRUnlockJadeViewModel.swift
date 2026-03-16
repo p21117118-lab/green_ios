@@ -69,7 +69,7 @@ class QRUnlockJadeViewModel {
     func hint() -> String {
         switch scope {
         case .oracle:
-            return "id_on_jade_select_qr__continue_".localized
+            return "On Jade select QR Mode > QR PIN Unlock > Continue > Enter your PIN".localized
         case .handshakeInit:
             return "id_on_jade_select_qr__continue_".localized
         case .handshakeInitReply:
