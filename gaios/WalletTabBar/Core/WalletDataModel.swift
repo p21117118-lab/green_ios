@@ -381,6 +381,9 @@ actor WalletDataModel {
         if !wallet.isEphemeral && mainAccount.isHW && !mainAccount.isWatchonly {
             accountItems += [.swaps]
         }
+        if !wallet.isEphemeral && !mainAccount.isWatchonly && mainAccount.hasBoltzKey {
+            accountItems += [.rescanSwaps]
+        }
         return [
             .init(section: .header, items: [.header]),
             .init(section: .wallet, items: walletItems),

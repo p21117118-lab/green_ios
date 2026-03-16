@@ -187,6 +187,23 @@ extension TabSettingsVC: UITableViewDelegate, UITableViewDataSource {
             createAccount()
         case .swaps:
             pushJadeBoltzSwapViewController()
+        case .rescanSwaps:
+            Task { await self.rescanSwaps() }
+        }
+    }
+
+    func rescanSwaps() async {
+        startLoader(message: "Rescan swaps...".localized)
+        let task = Task { [weak self] in
+            try await self?.viewModel.rescanSwaps()
+        }
+        switch await task.result {
+        case .success:
+            stopLoader()
+            DropAlert().success(message: "Rescan completed".localized)
+        case .failure(let err):
+            stopLoader()
+            showError(err.description().localized)
         }
     }
 

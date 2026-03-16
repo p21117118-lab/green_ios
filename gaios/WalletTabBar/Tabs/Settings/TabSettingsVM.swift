@@ -107,6 +107,11 @@ class TabSettingsVM: TabViewModel {
                 title: SettingsItem.swaps.string,
                 subtitle: "",
                 type: .swaps)
+        case .rescanSwaps:
+            return gaios.TabSettingsCellModel(
+                title: SettingsItem.rescanSwaps.string,
+                subtitle: "",
+                type: .rescanSwaps)
         }
     }
 
@@ -181,5 +186,22 @@ class TabSettingsVM: TabViewModel {
         return AuthenticationTypeHandler.findAuth(
             method: .AuthKeyLightning,
             forNetwork: mainAccount.keychainLightning)
+    }
+
+    func rescanSwaps() async throws {
+        await wallet.swapMonitor?.stop()
+        let liquidAddress = await getAddress(subaccount: wallet.liquidSubaccounts.first)
+        let bitcoinAddress = await getAddress(subaccount: wallet.bitcoinSubaccounts.first)
+        if let liquidAddress, let bitcoinAddress {
+            try await wallet.swapMonitor?.restoreSwaps(bitcoinAddress: bitcoinAddress, liquidAddress: liquidAddress)
+        }
+        try await wallet.swapMonitor?.start()
+    }
+
+    func getAddress(subaccount: WalletItem?) async -> String? {
+        guard let subaccount else { return nil }
+        let session = wallet.getSession(for: subaccount)
+        let address = try? await session?.getReceiveAddress(subaccount: subaccount.pointer)
+        return address?.address
     }
 }

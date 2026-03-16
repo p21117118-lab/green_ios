@@ -49,6 +49,14 @@ public actor SwapMonitor {
     private func removeTask(for id: NSManagedObjectID) {
         activeTasks.removeValue(forKey: id)
     }
+    
+    public func stop() async {
+        for task in activeTasks {
+            task.value.cancel()
+        }
+        // Give some time for tasks to cancel
+        try? await Task.sleep(nanoseconds: 1_000_000_000)
+    }
 
     private func getPendingSwaps() async throws -> [NSManagedObjectID] {
         try await BoltzController.shared.fetchPendingSwaps(xpubHashId: xpubHashId)
