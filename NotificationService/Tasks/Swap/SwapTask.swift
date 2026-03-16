@@ -81,6 +81,7 @@ public class SwapTask {
     nonisolated public func loopSwap(xpubHashId: String, lwkSession: LwkSessionManager, persistentId: NSManagedObjectID, swap: SwapResponse) async throws -> PaymentState {
         let monitor = SwapMonitor(xpubHashId: xpubHashId, lwkSession: lwkSession)
         var state = PaymentState.continue
+        var swap = swap
         repeat {
             try Task.checkCancellation()
             let elapsed = Date().timeIntervalSince(startTime)
@@ -89,7 +90,7 @@ public class SwapTask {
                 await lwkSession.disconnect()
                 throw NotificationError.Timeout
             }
-            state = try await monitor.handleSingleSwap(persistentId: persistentId, swap: swap)
+            state = try await monitor.handleSingleSwap(persistentId: persistentId, swap: &swap)
         } while state == PaymentState.continue && !Task.isCancelled
         await lwkSession.disconnect()
         return state

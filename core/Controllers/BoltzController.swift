@@ -77,8 +77,7 @@ public actor BoltzController {
     public func fetchPendingSwaps(xpubHashId: String) async throws -> [NSManagedObjectID] {
         try await fetchIDs([
             NSPredicate(format: "xpubHashId == %@", xpubHashId),
-            NSPredicate(format: "isPending == true"),
-            NSPredicate(format: "txHash == nil")
+            NSPredicate(format: "isPending == true")
         ])
     }
     public func fetchSwaps(xpubHashId: String, invoice: String, swapType: BoltzSwapTypes) async throws -> [NSManagedObjectID] {

@@ -19,6 +19,7 @@ public actor SwapMonitor {
 
     /// Called on wallet login to resume pending work
     public func start() async throws {
+        try await BoltzController.shared.dump(xpubHashId: xpubHashId)
         let pendingIDs = try await getPendingSwaps()
         for swapId in pendingIDs {
             await monitorSwap(id: swapId)
@@ -61,30 +62,32 @@ public actor SwapMonitor {
         let swap = try await getPendingSwap(id: id)
         guard let swap else { return }
         if swap.isPending == false { return }
-        logger.info("SwapMonitor \(swap.id ?? "", privacy: .public): \(swap.data?.prefix(128) ?? "")")
+        logger.info("LWK \(swap.id ?? "", privacy: .public): \(swap.data?.prefix(128) ?? "")")
         switch swap.type {
         case .some(BoltzSwapTypes.Submarine):
             if let pay = try await lwkSession.restorePreparePay(data: swap.data ?? "") {
+                logger.info("LWK \(swap.id ?? "", privacy: .public) restored")
                 let state = try await loopSwap(swap: SwapResponse.submarine(pay))
-                logger.info("SwapMonitor \(swap.id ?? "", privacy: .public) \(state.localized, privacy: .public)")
+                logger.info("LWK \(swap.id ?? "", privacy: .public) \(state.localized, privacy: .public)")
             }
         case .some(BoltzSwapTypes.ReverseSubmarine):
             if let invoice = try await lwkSession.restoreInvoice(data: swap.data ?? "") {
+                logger.info("LWK \(swap.id ?? "", privacy: .public) restored")
                 let state = try await loopSwap(swap: SwapResponse.reverseSubmarine(invoice))
-                logger.info("SwapMonitor \(swap.id ?? "", privacy: .public) \(state.localized, privacy: .public)")
+                logger.info("LWK \(swap.id ?? "", privacy: .public) \(state.localized, privacy: .public)")
             }
         case .some(.Chain):
             if let lockup = try await lwkSession.restoreLockup(data: swap.data ?? "") {
+                logger.info("LWK \(swap.id ?? "", privacy: .public) restored")
                 let state = try await loopSwap(swap: SwapResponse.chain(lockup))
-                logger.info("SwapMonitor \(swap.id ?? "", privacy: .public) \(state.localized, privacy: .public)")
+                logger.info("LWK \(swap.id ?? "", privacy: .public) \(state.localized, privacy: .public)")
             }
         case .none:
-            logger.info("SwapMonitor \(swap.id ?? "", privacy: .public) invalid")
+            logger.info("LWK \(swap.id ?? "", privacy: .public) invalid")
         }
     }
 
-    
-    nonisolated public func handleSingleSwap(persistentId: NSManagedObjectID, swap: SwapResponse) async throws -> PaymentState {
+    nonisolated public func handleSingleSwap(persistentId: NSManagedObjectID, swap: inout SwapResponse) async throws -> PaymentState {
         let swapId = try swap.swapId()
         do {
             let state = try swap.advance()
@@ -105,6 +108,7 @@ public actor SwapMonitor {
             return state
         } catch LwkError.NoBoltzUpdate {
             try await Task.sleep(nanoseconds: 1_000_000_000)
+            logger.info("LWK \(swapId, privacy: .public) NoBoltzUpdate!")
             if let swap = try? await BoltzController.shared.get(with: persistentId) {
                 return swap.isPending ? PaymentState.continue : PaymentState.success
             } else {
@@ -125,15 +129,17 @@ public actor SwapMonitor {
 
     nonisolated public func loopSwap(swap: SwapResponse) async throws -> PaymentState {
         let swapId = try swap.swapId()
+        logger.error("LWK \(swapId, privacy: .public) loopSwap")
         let persistentId = try? await BoltzController.shared.fetchID(byId: swapId)
         guard let persistentId else {
             logger.error("LWK \(swapId, privacy: .public) not found")
             throw LwkError.Generic(msg: "Swap not found")
         }
         var state = PaymentState.continue
+        var swap = swap
         repeat {
             try Task.checkCancellation()
-            state = try await self.handleSingleSwap(persistentId: persistentId, swap: swap)
+            state = try await self.handleSingleSwap(persistentId: persistentId, swap: &swap)
         } while state == PaymentState.continue && !Task.isCancelled
         return state
     }

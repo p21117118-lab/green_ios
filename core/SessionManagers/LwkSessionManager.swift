@@ -238,7 +238,7 @@ public class LwkSessionManager: SessionManager {
         guard let boltzSession = boltzSession else {
             throw LwkError.Generic(msg: "Invalid session")
         }
-        logger.info("Restoring reverse swaps using address \(liquidAddress)")
+        logger.info("LWK Restoring reverse swaps using address \(liquidAddress)")
         let liquidAddress = try Address(s: liquidAddress)
         let list = try boltzSession.swapRestore()
         let reverseSwaps = try boltzSession.restorableReverseSwaps(swapList: list, claimAddress: liquidAddress)
@@ -246,29 +246,41 @@ public class LwkSessionManager: SessionManager {
             let invoice = try boltzSession.restoreInvoice(data: reverseSwap)
             let swapId = try invoice.swapId()
             let data = try invoice.serialize()
-            try? await BoltzController.shared.upsert(
-                id: swapId,
-                data: data,
-                isPending: true,
-                xpubHashId: xpubHashId,
-                swapType: SwapType.reverseSwap,
-                txHash: nil)
+            logger.info("LWK Restoring \(swapId)")
+            if let swapDbId = try? await BoltzController.shared.fetchID(byId: swapId) {
+                try? await BoltzController.shared.update(with: swapDbId, newIsPending: true)
+            } else {
+                _ = try? await BoltzController.shared.create(
+                    id: swapId,
+                    data: data,
+                    isPending: true,
+                    xpubHashId: xpubHashId,
+                    invoice: nil,
+                    swapType: SwapType.reverseSwap,
+                    txHash: nil)
+            }
         }
-        logger.info("Restoring submarine swaps using address \(liquidAddress)")
+        logger.info("LWK Restoring submarine swaps using address \(liquidAddress)")
         let submarineSwaps = try boltzSession.restorableSubmarineSwaps(swapList: list, refundAddress: liquidAddress)
         for submarineSwap in submarineSwaps {
             let pay = try boltzSession.restorePreparePay(data: submarineSwap)
             let swapId = try pay.swapId()
             let data = try pay.serialize()
-            try? await BoltzController.shared.upsert(
-                id: swapId,
-                data: data,
-                isPending: true,
-                xpubHashId: xpubHashId,
-                swapType: SwapType.submarineSwap,
-                txHash: nil)
+            logger.info("LWK Restoring \(swapId)")
+            if let swapDbId = try? await BoltzController.shared.fetchID(byId: swapId) {
+                try? await BoltzController.shared.update(with: swapDbId, newIsPending: true)
+            } else {
+                _ = try? await BoltzController.shared.create(
+                    id: swapId,
+                    data: data,
+                    isPending: true,
+                    xpubHashId: xpubHashId,
+                    invoice: nil,
+                    swapType: SwapType.submarineSwap,
+                    txHash: nil)
+            }
         }
-        logger.info("Restoring swaps using address \(bitcoinAddress)")
+        logger.info("LWK Restoring swaps using address \(bitcoinAddress)")
         let bitcoinAddress = try BitcoinAddress(s: bitcoinAddress)
         let btcToLbtcSwaps = try boltzSession.restorableBtcToLbtcSwaps(swapList: list, claimAddress: liquidAddress, refundAddress: bitcoinAddress)
         let lbtcToBtcSwaps = try boltzSession.restorableLbtcToBtcSwaps(swapList: list, claimAddress: bitcoinAddress, refundAddress: liquidAddress)
@@ -276,13 +288,19 @@ public class LwkSessionManager: SessionManager {
             let lockup = try boltzSession.restoreLockup(data: swap)
             let swapId = try lockup.swapId()
             let data = try lockup.serialize()
-            try? await BoltzController.shared.upsert(
-                id: swapId,
-                data: data,
-                isPending: true,
-                xpubHashId: xpubHashId,
-                swapType: SwapType.chainSwap,
-                txHash: nil)
+            logger.info("LWK Restoring \(swapId)")
+            if let swapDbId = try? await BoltzController.shared.fetchID(byId: swapId) {
+                try? await BoltzController.shared.update(with: swapDbId, newIsPending: true)
+            } else {
+                _ = try? await BoltzController.shared.create(
+                    id: swapId,
+                    data: data,
+                    isPending: true,
+                    xpubHashId: xpubHashId,
+                    invoice: nil,
+                    swapType: SwapType.chainSwap,
+                    txHash: nil)
+            }
         }
     }
 }
