@@ -38,3 +38,16 @@ extension String: Localizable {
         return String(format: self.localized, arguments: args)
     }
 }
+extension String {
+    func removingTrailingZeros(decimalSeparator: String = Locale.current.decimalSeparator ?? ".") -> String {
+        guard self.contains(decimalSeparator) else { return self }
+        var result = self
+        while result.hasSuffix("0") {
+            result = String(result.dropLast())
+        }
+        if result.hasSuffix(decimalSeparator) {
+            result = String(result.dropLast())
+        }
+        return result
+    }
+}

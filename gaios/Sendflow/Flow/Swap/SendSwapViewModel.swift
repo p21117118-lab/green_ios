@@ -219,13 +219,13 @@ final class SendSwapViewModel {
             self?.state.networkFee = res?.networkFee
             if let selectedAmount = self?.state.from.amount {
                 if let res, selectedAmount < res.min {
-                    let minAmount = self?.convertToDenom(satoshi: res.min)
+                    let minAmount = self?.convertToDenomTrimmed(satoshi: res.min)
                     let defaultMinAmount = "\(res.min) sats"
-                    throw SendFlowError.invalidAmount("Min limit: \(minAmount ?? defaultMinAmount)")
+                    throw SendFlowError.invalidAmount("Min limit: \((minAmount ?? defaultMinAmount).removingTrailingZeros())")
                 } else if let res, selectedAmount > res.max {
-                    let maxAmount = self?.convertToDenom(satoshi: res.max)
+                    let maxAmount = self?.convertToDenomTrimmed(satoshi: res.max)
                     let defaultMaxAmount = "\(res.max) sats"
-                    throw SendFlowError.invalidAmount("Max limit: \(maxAmount ?? defaultMaxAmount)")
+                    throw SendFlowError.invalidAmount("Max limit: \((maxAmount ?? defaultMaxAmount).removingTrailingZeros())")
                 } else if self?.state.from.account?.btc ?? 0 < selectedAmount {
                     throw SendFlowError.insufficientFunds
                 }
@@ -233,8 +233,12 @@ final class SendSwapViewModel {
             self?.publish()
         }
     }
-    func convertToDenom(satoshi: UInt64) -> String? {
-        return Balance.fromSatoshi(satoshi, assetId: state.from.assetId)?.toText(state.denomination)
+    func convertToDenomTrimmed(satoshi: UInt64) -> String? {
+        if let (amount, ticker) = Balance.fromSatoshi(satoshi, assetId: state.from.assetId)?.toValue(state.denomination) {
+            let trimAmount = amount.removingTrailingZeros()
+            return "\(trimAmount) \(ticker)"
+        }
+        return nil
     }
     func feeRateText() -> String? {
         if let feeRate = state.feeRate {
