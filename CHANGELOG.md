@@ -3,13 +3,16 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## [Unreleased]
+## [5.2.1] - 2026-03-17
 
 ### Added
 - Added swap Id to transaction details
 - Rescan swaps in settings
 
-## [5.2.0] 2026-03-05
+### Changed
+- Bug fixes
+
+## [5.2.0] - 2026-03-05
 
 ### Added
 - Added cross chain swaps
