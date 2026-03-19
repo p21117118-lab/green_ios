@@ -73,7 +73,7 @@ class DialogSendHWSummaryViewController: UIViewController {
             lblFiat.isHidden = account.gdkNetwork.liquid
             icon.image = registry?.image(for: assetId)
             lblFeeTitle.text = "id_fee".localized
-            if let balance = Balance.fromSatoshi(transaction.fee, assetId: account.gdkNetwork.getFeeAsset()) {
+            if let balance = Balance.fromSatoshi(transaction.fee ?? 0, assetId: account.gdkNetwork.getFeeAsset()) {
                 let (amount, denom) = balance.toDenom()
                 let (fiat, fiatCurrency) = balance.toFiat()
                 lblFeeAmount.text = "\(amount) \(denom)"

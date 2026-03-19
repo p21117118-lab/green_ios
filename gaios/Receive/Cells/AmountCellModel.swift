@@ -173,10 +173,10 @@ struct AmountCellModel {
         }
     }
     var defaultCurrency: String? = {
-        return Balance.fromSatoshi(0, assetId: AssetInfo.btcId)?.toFiat().1
+        return Balance.fromSatoshi(Int64(0), assetId: AssetInfo.btcId)?.toFiat().1
     }()
     var defaultDenomination: String? = {
-        return Balance.fromSatoshi(0, assetId: AssetInfo.btcId)?.toDenom().1
+        return Balance.fromSatoshi(Int64(0), assetId: AssetInfo.btcId)?.toDenom().1
     }()
 
     mutating func setOpenChannelFee(_ fee: Int64) {

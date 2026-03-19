@@ -52,6 +52,9 @@ public class WalletManager {
     // Registry asset manager
     public var registry: AssetsManager
 
+    // Converter service
+    public var converter: ConverterManager?
+
     // Mainnet / testnet networks
     let mainnet: Bool
 
@@ -94,6 +97,7 @@ public class WalletManager {
         self.mainnet = prominentNetwork?.gdkNetwork.mainnet ?? true
         self.prominentNetwork = prominentNetwork ?? .bitcoinSS
         self.registry = AssetsManager(testnet: !mainnet, lightning: AppSettings.shared.experimental)
+        self.converter = ConverterManager(provider: self, testnet: !mainnet)
         if mainnet {
             addSession(for: .bitcoinSS)
             addSession(for: .liquidSS)
@@ -390,7 +394,7 @@ public class WalletManager {
             }
             // Login for all other networks
             do {
-                return try await loginSession(
+                let res = try await loginSession(
                     session: session,
                     credentials: credentials,
                     lightningCredentials: lightningCredentials,
@@ -400,6 +404,8 @@ public class WalletManager {
                     fullRestore: fullRestore,
                     creation: creation,
                     parentWalletId: parentWalletId)
+                _ = try? await session.loadSettings()
+                return res
             } catch {
                 await failureSessionsError.add(for: session.networkType, error: error)
                 return nil
@@ -422,11 +428,7 @@ public class WalletManager {
         }
         _ = try await self.subaccounts()
         logger.info("WM subaccounts: \(self.subaccounts.count)")
-        if fullRestore {
-            logger.info("WM syncSettings")
-            try? await self.syncSettings()
-        }
-        _ = try? await self.prominentSession?.loadSettings()
+        try? await self.syncSettings(restore: fullRestore)
         return loginUserDatas.first { $0.key == prominentNetwork }?.value
     }
 
@@ -487,25 +489,19 @@ public class WalletManager {
         liquidSubaccounts.filter { $0.satoshi?.filter{ $0.key == assetId }.compactMap{ $0.value }.reduce(0, +) ?? 0 > 0 }
     }
 
-    func syncSettings() async throws {
+    func syncSettings(restore: Bool) async throws {
         // Prefer Multisig for initial sync as those networks are synced across devices
-        // In case of Lightning Shorcut get settings from parent wallet
-        let syncNetwork: NetworkSecurityCase? = {
-            if activeBitcoinMultisig {
-                return bitcoinMultisigNetwork
-            } else if activeLiquidMultisig {
-                return liquidMultisigNetwork
-            } else {
-                return prominentSession?.networkType
+        var session = prominentSession
+        if restore {
+            if let s = activeMultisigSessions.first {
+                session = s
             }
-        }()
-        guard let prominentSession = sessions[(syncNetwork ?? .bitcoinSS).rawValue],
-              let prominentSettings = try? await prominentSession.loadSettings() else {
-            return
         }
-        for session in activeSessions {
-            _ = try? await session.value.changeSettings(settings: prominentSettings)
-            _ = try? await session.value.loadSettings()
+        if let settings = session?.settings {
+            for s in activeSessions where s.key != session?.networkType.network && settings != s.value.settings {
+                _ = try? await s.value.changeSettings(settings: settings)
+                _ = try? await s.value.loadSettings()
+            }
         }
     }
 
@@ -855,5 +851,51 @@ extension WalletManager: AssetsProvider {
         let session = activeLiquidSessions.first ?? liquidSinglesigSession ?? SessionManager(liquidSinglesigNetwork, newNotificationDelegate: nil)
         try await session.connect()
         return try await session.refreshAssets(icons: icons, assets: assets)
+    }
+}
+extension WalletManager: ConverterProvider {
+    public func convertBitcoinAmount(params: gdk.Balance) throws -> gdk.Balance? {
+        guard let session = activeBitcoinSessions.first ?? prominentSession else {
+            return nil
+        }
+        return try convert(session: session, params: params)
+    }
+
+    func convert(session: SessionManager, params: gdk.Balance) throws -> gdk.Balance? {
+        guard var input = params.toDict() else {
+            return nil
+        }
+        // normalize for asset info
+        if let assetId = params.assetId {
+            if AssetInfo.baseIds.contains(assetId) {
+                input["asset_id"] = nil
+                input["asset_info"] = nil
+            } else if let assetValue = params.assetValue {
+                input[assetId] = assetValue
+            }
+        }
+        // call convert amount
+        let res = try session.convertAmount(input: input)
+        guard var balance = Balance.from(res) as? Balance else {
+            return nil
+        }
+        // normalize result for assets
+        if let assetId = params.assetId {
+            balance.assetId = assetId
+            if let assetValue = res[assetId] as? String {
+                balance.assetValue = assetValue
+            }
+            if let assetInfo = params.assetInfo {
+                balance.assetInfo = assetInfo
+            }
+        }
+        return balance
+    }
+    
+    public func convertLiquidAmount(params: gdk.Balance) throws -> gdk.Balance? {
+        guard let session = activeLiquidSessions.first else {
+            return nil
+        }
+        return try convert(session: session, params: params)
     }
 }

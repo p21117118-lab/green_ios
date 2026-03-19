@@ -65,7 +65,7 @@ class MultisigSettingsViewModel {
     }
 
     func enableRecoveryTransactions(_ enable: Bool) async throws {
-        let settings = session.settings!
+        var settings = session.settings!
         settings.notifications = SettingsNotifications(emailIncoming: enable, emailOutgoing: enable)
         try await session.changeSettings(settings: settings)
         try await load()

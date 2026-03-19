@@ -179,7 +179,7 @@ extension DialogDetailViewController: UITableViewDelegate, UITableViewDataSource
             case .identifier:
                 cell.configure("id_asset_id".localized, tag)
             case .amount:
-                let balance = Balance.fromSatoshi(satoshi ?? 0, assetId: asset!.assetId)
+                let balance = Balance.fromSatoshi(satoshi ?? Int64(0), assetId: asset!.assetId)
                 cell.configureAmount("id_total_balance".localized, balance?.toValue().0 ?? "", hideBalance)
             case .precision:
                 cell.configure("id_precision".localized, isLBTC ? "8" : String(asset?.precision ?? 0))

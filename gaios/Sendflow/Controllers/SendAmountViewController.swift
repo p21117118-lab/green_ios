@@ -145,7 +145,7 @@ class SendAmountViewController: KeyboardViewController {
         reloadNavigationBar()
         reloadForLightning()
 
-        let balance = viewModel.isFiat ? Balance.fromFiat(text) : Balance.from(text, assetId: viewModel.assetId, denomination: viewModel.denominationType)
+        let balance = viewModel.isFiat ? Balance.fromFiat(text, assetId: viewModel.assetId) : Balance.from(text, assetId: viewModel.assetId, denomination: viewModel.denominationType)
 
         viewModel.createTx.satoshi = balance?.satoshi
         lblFiat.text = "≈ \(viewModel.subamountText ?? "")"
@@ -379,9 +379,9 @@ class SendAmountViewController: KeyboardViewController {
         if let vc = storyboard.instantiateViewController(withIdentifier: "SendTxConfirmViewController") as? SendTxConfirmViewController {
             vc.viewModel = viewModel.sendSendTxConfirmViewModel()
             if isWithdraw {
-                if let text = amountField.text, let balance = viewModel.isFiat ? Balance.fromFiat(text) : Balance.from(text, assetId: viewModel.assetId, denomination: viewModel.denominationType) {
+                if let text = amountField.text, let balance = viewModel.isFiat ? Balance.fromFiat(text, assetId: viewModel.assetId) : Balance.from(text, assetId: viewModel.assetId, denomination: viewModel.denominationType) {
                     vc.viewModel.withdrawData = withdrawData
-                    vc.viewModel.withdrawAmount = UInt64(balance.satoshi)
+                    vc.viewModel.withdrawAmount = UInt64(balance.satoshi ?? 0)
                 }
             }
             navigationController?.pushViewController(vc, animated: true)
@@ -531,7 +531,7 @@ class SendAmountViewController: KeyboardViewController {
         if amountField.text == "" {
             return .empty
         }
-        let balance = viewModel.isFiat ? Balance.fromFiat(text) : Balance.from(text, assetId: viewModel.assetId, denomination: viewModel.denominationType)
+        let balance = viewModel.isFiat ? Balance.fromFiat(text, assetId: viewModel.assetId) : Balance.from(text, assetId: viewModel.assetId, denomination: viewModel.denominationType)
         guard let sats = balance?.satoshi else { return .minInvalid }
         if sats > maxWithDrawAmount { return .maxInvalid }
         if sats < minWithDrawAmount { return .minInvalid }
@@ -584,7 +584,7 @@ extension SendAmountViewController {
             btnNextEnabled = false
             return
         }
-        let balance = viewModel.isFiat ? Balance.fromFiat(text) : Balance.from(text, assetId: viewModel.assetId, denomination: viewModel.denominationType)
+        let balance = viewModel.isFiat ? Balance.fromFiat(text, assetId: viewModel.assetId) : Balance.from(text, assetId: viewModel.assetId, denomination: viewModel.denominationType)
         viewModel.createTx.satoshi = balance?.satoshi
         lblFiat.text = "≈ \(viewModel.subamountText ?? "")"
         lblConversion.text = "≈ \(viewModel?.conversionText ?? "")"

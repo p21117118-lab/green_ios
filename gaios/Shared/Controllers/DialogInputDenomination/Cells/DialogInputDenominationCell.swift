@@ -37,13 +37,13 @@ class DialogInputDenominationCell: UITableViewCell {
 
         switch denomination {
         case .BTC:
-            hint = balance.btc
+            hint = balance.btc ?? ""
         case .MilliBTC:
-            hint = balance.mbtc
+            hint = balance.mbtc ?? ""
         case .MicroBTC, .Bits:
-            hint = balance.bits
+            hint = balance.bits ?? ""
         case .Sats:
-            hint = balance.sats
+            hint = balance.sats ?? ""
         }
         lblHint.text = "\(hint) \(self.symbol(denomination, network))"
     }

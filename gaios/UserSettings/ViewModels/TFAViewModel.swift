@@ -71,12 +71,12 @@ class TFAViewModel {
             let limits = twoFactorConfig.limits
             var (amount, den) = ("", "")
             if limits.isFiat {
-                let balance = Balance.fromFiat(limits.fiat ?? "0")
+                let balance = Balance.fromFiat(limits.fiat ?? "0", assetId: AssetInfo.btcId)
                 (amount, den) = balance?.toDenom() ?? ("", "")
             } else {
                 let denom = settings.denomination.rawValue
                 let assetId = session.gdkNetwork.getFeeAsset()
-                let balance = Balance.fromDenomination(limits.get(TwoFactorConfigLimits.CodingKeys(rawValue: denom)!) ?? "0", assetId: assetId)
+                let balance = Balance.from(limits.get(TwoFactorConfigLimits.CodingKeys(rawValue: denom)!) ?? "0", assetId: assetId)
                 (amount, den) = balance?.toFiat() ?? ("", "")
             }
             return String(format: "%@ %@", amount, den)

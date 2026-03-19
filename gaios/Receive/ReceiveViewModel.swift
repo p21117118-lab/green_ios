@@ -276,7 +276,7 @@ class ReceiveViewModel {
     }
 
     func getBalance() -> Balance? {
-        return Balance.fromSatoshi(satoshi ?? 0.0, assetId: anyOrAsset.assetId ?? "")
+        return Balance.fromSatoshi(satoshi ?? Int64(0), assetId: anyOrAsset.assetId ?? "")
     }
 
     func ltSuccessViewModel(details: InvoicePaidDetails) async throws -> LTSuccessViewModel? {

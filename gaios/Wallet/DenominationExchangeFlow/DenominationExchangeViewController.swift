@@ -128,7 +128,7 @@ class DenominationExchangeViewController: UIViewController {
     }
 
     func updateSettings() async {
-        guard let settings = viewModel.settings else { return }
+        guard var settings = viewModel.settings else { return }
         if let denomination = viewModel.editingDenomination {
             settings.denomination = denomination
         }
@@ -137,7 +137,7 @@ class DenominationExchangeViewController: UIViewController {
         }
         let task = Task { [weak viewModel] in
             try await viewModel?.updateSettings(settings)
-            _ = Balance.fromSatoshi(0, assetId: AssetInfo.btcId)?.toFiat()
+            _ = Balance.fromSatoshi(UInt64(0), assetId: AssetInfo.btcId)?.toFiat()
         }
         switch await task.result {
         case .success:

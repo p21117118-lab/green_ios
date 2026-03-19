@@ -776,6 +776,7 @@
 		81CB5A3C2F504BF300908553 /* LiquidWalletKit in Frameworks */ = {isa = PBXBuildFile; productRef = 81CB5A3B2F504BF300908553 /* LiquidWalletKit */; };
 		81CB5A3E2F504C1700908553 /* LiquidWalletKit in Frameworks */ = {isa = PBXBuildFile; productRef = 81CB5A3D2F504C1700908553 /* LiquidWalletKit */; };
 		81CB5A402F504CCC00908553 /* LiquidWalletKit in Frameworks */ = {isa = PBXBuildFile; productRef = 81CB5A3F2F504CCC00908553 /* LiquidWalletKit */; };
+		81CBFF712F6B72A9004AB3D8 /* ConverterManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81CBFF702F6B72A9004AB3D8 /* ConverterManager.swift */; };
 		81CCDF082B9F3E3800C8490C /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81CCDF072B9F3E3800C8490C /* Logger.swift */; };
 		81CDF3452BF2D50500AA4C19 /* SendHWConfirmViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81CDF3442BF2D50500AA4C19 /* SendHWConfirmViewModel.swift */; };
 		81D307E52F22436A0091AF50 /* SendLwkSignViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81D307E42F22436A0091AF50 /* SendLwkSignViewModel.swift */; };
@@ -1772,6 +1773,7 @@
 		81C3BC352F26F31B00CD4F2D /* SendTxSuccessViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendTxSuccessViewController.swift; sourceTree = "<group>"; };
 		81C4DC202F25306F003E9CC9 /* PaymentTarget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentTarget.swift; sourceTree = "<group>"; };
 		81C602A422A553D3004E26E1 /* Assets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Assets.swift; sourceTree = "<group>"; };
+		81CBFF702F6B72A9004AB3D8 /* ConverterManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConverterManager.swift; sourceTree = "<group>"; };
 		81CCDF072B9F3E3800C8490C /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		81CDF3442BF2D50500AA4C19 /* SendHWConfirmViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendHWConfirmViewModel.swift; sourceTree = "<group>"; };
 		81CF900C28EC75FE003CC793 /* ProdSettings.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = ProdSettings.xcconfig; sourceTree = "<group>"; };
@@ -4011,6 +4013,7 @@
 				0992F87320E6E40B00F6AAAB /* AuthenticationTypeHandler.swift */,
 				345C70872836254600EF3971 /* AssetsManager.swift */,
 				81865F48299F7D24002CBA87 /* MigratorManager.swift */,
+				81CBFF702F6B72A9004AB3D8 /* ConverterManager.swift */,
 				81F328FB29ED319300D54F1D /* ResolverManager.swift */,
 				81BF5D4828C885AF006225C6 /* WalletManager.swift */,
 				81CCDF072B9F3E3800C8490C /* Logger.swift */,
@@ -5786,6 +5789,7 @@
 				8177EE192B6C933400C2271C /* AssetsManager.swift in Sources */,
 				8177EE1A2B6C933400C2271C /* MigratorManager.swift in Sources */,
 				8177EE1B2B6C933400C2271C /* LightningSessionManager.swift in Sources */,
+				81CBFF712F6B72A9004AB3D8 /* ConverterManager.swift in Sources */,
 				8177EE1C2B6C933400C2271C /* SessionManager.swift in Sources */,
 				8152908B2EE0FFBE00BB487A /* Lwk.swift in Sources */,
 				81F9B0262F3E493D003D4A85 /* Boltz.swift in Sources */,

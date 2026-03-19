@@ -328,7 +328,7 @@ actor WalletDataModel {
             }
         }
         // Load missing princing
-        if Balance.fromSatoshi(0, assetId: wallet.prominentSession?.gdkNetwork.getFeeAsset() ?? "btc")?.toFiat().0 == "n/a" {
+        if Balance.fromSatoshi(Int64(0), assetId: wallet.prominentSession?.gdkNetwork.getFeeAsset() ?? "btc")?.toFiat().0 == "n/a" {
             cards.append(AlertCardType.fiatMissing)
         }
         // Load system messages

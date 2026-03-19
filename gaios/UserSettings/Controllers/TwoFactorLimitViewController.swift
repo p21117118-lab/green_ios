@@ -28,10 +28,10 @@ class TwoFactorLimitViewController: KeyboardViewController {
     var satoshi: Int64? {
         guard amount != nil else { return nil }
         if isFiat {
-            return Balance.fromFiat(amount ?? "0")?.satoshi
+            return Balance.fromFiat(amount ?? "0", assetId: AssetInfo.btcId)?.satoshi
         } else {
             let assetId = session.gdkNetwork.getFeeAsset()
-            return Balance.fromDenomination(amount ?? "0", assetId: assetId)?.satoshi
+            return Balance.from(amount ?? "0", assetId: assetId)?.satoshi
         }
     }
 
@@ -71,7 +71,7 @@ class TwoFactorLimitViewController: KeyboardViewController {
         guard let limits = limits else { return }
         isFiat = limits.isFiat
         if limits.isFiat {
-            let (amount, denom) = Balance.fromFiat(limits.fiat ?? "0")?.toValue() ?? ("", "")
+            let (amount, denom) = Balance.fromFiat(limits.fiat ?? "0", assetId: AssetInfo.btcId)?.toValue() ?? ("", "")
             descriptionLabel.text = String(format: "id_your_twofactor_threshold_is_s".localized, "\(amount) \(denom)")
         } else {
             let denom = denomination.rawValue

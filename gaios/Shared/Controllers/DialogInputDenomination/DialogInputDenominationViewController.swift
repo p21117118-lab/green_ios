@@ -166,7 +166,7 @@ extension DialogInputDenominationViewController: UITableViewDelegate, UITableVie
     }
 
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        let fiatCurrency = Balance.fromSatoshi(0, assetId: AssetInfo.btcId)?.toFiat().1
+        let fiatCurrency = Balance.fromSatoshi(UInt64(0), assetId: AssetInfo.btcId)?.toFiat().1
         if let fView = Bundle.main.loadNibNamed("DialogInputDenominationFooter", owner: self, options: nil)?.first as? DialogInputDenominationFooter {
             fView.configure(title: fiatCurrency ?? "",
                             hint: viewModel.balance?.fiat ?? "",

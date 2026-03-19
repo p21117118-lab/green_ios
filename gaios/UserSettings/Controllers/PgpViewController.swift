@@ -63,7 +63,7 @@ class PgpViewController: KeyboardViewController {
         }
     }
     func changeSettings(session: SessionManager, pgp: String) async throws {
-        guard let settings = session.settings else { return }
+        guard var settings = session.settings else { return }
         settings.pgp = pgp
         _ = try await session.changeSettings(settings: settings)
     }

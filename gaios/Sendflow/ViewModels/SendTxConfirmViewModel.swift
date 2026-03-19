@@ -88,7 +88,7 @@ class SendTxConfirmViewModel {
         set { transaction?.memo = newValue }
     }
 
-    var amount: Balance? { Balance.fromSatoshi( isWithdraw ? withdrawAmount : satoshi ?? 0, assetId: assetId) }
+    var amount: Balance? { Balance.fromSatoshi( isWithdraw ? Int64(withdrawAmount) : Int64(satoshi ?? 0), assetId: assetId) }
     var fee: Balance? { Balance.fromSatoshi(transaction?.fee ?? 0, assetId: transaction?.feeAsset ?? "btc") }
     var total: Balance? {
         let feeAsset = session?.gdkNetwork.getFeeAsset()

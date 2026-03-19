@@ -75,7 +75,7 @@ class RecoveryTransactionsViewController: UIViewController {
     }
 
     func enableRecoveryTransactions(_ enable: Bool) {
-        guard let session = viewModel?.session, let settings = viewModel?.session.settings else { return }
+        guard let session = viewModel?.session, var settings = viewModel?.session.settings else { return }
         settings.notifications = SettingsNotifications(emailIncoming: enable,
                                                        emailOutgoing: enable)
         Task {

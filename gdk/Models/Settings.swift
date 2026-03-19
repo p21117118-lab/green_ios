@@ -134,7 +134,7 @@ public struct SettingsItem {
     public var type: SettingsType
 }
 
-public struct SettingsNotifications: Codable {
+public struct SettingsNotifications: Codable, Equatable {
     public init(emailIncoming: Bool, emailOutgoing: Bool) {
         self.emailIncoming = emailIncoming
         self.emailOutgoing = emailOutgoing
@@ -146,11 +146,15 @@ public struct SettingsNotifications: Codable {
     }
     public var emailIncoming: Bool
     public var emailOutgoing: Bool
+    
+    public static func == (lhs: SettingsNotifications, rhs: SettingsNotifications) -> Bool {
+        lhs.emailIncoming == rhs.emailIncoming &&
+        lhs.emailOutgoing == rhs.emailOutgoing
+    }
 }
 
 // Main setting
-public class Settings: Codable {
-
+public struct Settings: Codable, Equatable {
     enum CodingKeys: String, CodingKey {
         case requiredNumBlock = "required_num_blocks"
         case altimeout = "altimeout"
@@ -172,6 +176,18 @@ public class Settings: Codable {
     public var sound: Bool
     public var notifications: SettingsNotifications?
     public var csvtime: Int?
+
+    public static func == (lhs: Settings, rhs: Settings) -> Bool {
+        lhs.requiredNumBlock == rhs.requiredNumBlock &&
+        lhs.altimeout == rhs.altimeout &&
+        lhs.unit == rhs.unit &&
+        lhs.pricing == rhs.pricing &&
+        lhs.customFeeRate == rhs.customFeeRate &&
+        lhs.pgp == rhs.pgp &&
+        lhs.sound == rhs.sound &&
+        lhs.notifications == rhs.notifications &&
+        lhs.csvtime == rhs.csvtime
+    }
 
     public var denomination: DenominationType {
         get {

@@ -86,7 +86,11 @@ public class SessionManager {
             gdkFailures = []
             paused = false
             session?.setNotificationHandler(notificationCompletionHandler: newNotification)
-            try session?.connect(netParams: GdkSettings.read()?.toNetworkParams(network).toDict() ?? [:])
+            var params = GdkSettings.read()?.toNetworkParams(network).toDict()
+            if network == "electrum-liquid" {
+                params?["price_url"] = "https://green-liquid-testnet.blockstream.com/prices"
+            }
+            try session?.connect(netParams: params ?? [:])
             connected = true
         } catch {
             switch error {
@@ -412,6 +416,11 @@ public class SessionManager {
 
     public func convertAmount(input: [String: Any]) throws -> [String: Any] {
         try self.session?.convertAmount(input: input) ?? [:]
+    }
+    
+    public func convertAmount(params: Balance) throws -> Balance? {
+        let res = try self.session?.convertAmount(input: params.toDict() ?? [:])
+        return Balance.from(res ?? [:]) as? Balance
     }
 
     public func refreshAssets(icons: Bool, assets: Bool) async throws {

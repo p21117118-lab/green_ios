@@ -109,11 +109,11 @@ class SendAmountViewModel {
     }
 
     var denomination: String? {
-        Balance.fromSatoshi(0, assetId: assetId)?.toValue(denominationType).1
+        Balance.fromSatoshi(Int64(0), assetId: assetId)?.toValue(denominationType).1
     }
 
     var fiatCurrency: String? {
-        Balance.fromSatoshi(0, assetId: assetId)?.toFiat().1
+        Balance.fromSatoshi(Int64(0), assetId: assetId)?.toFiat().1
     }
 
     var assetImage: UIImage? {

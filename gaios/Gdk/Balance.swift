@@ -9,10 +9,6 @@ struct BalanceRequest: Codable, Hashable {
 
 extension Balance {
 
-    static var session: SessionManager? { WalletManager.current?.prominentSession }
-    static var cache = [Int: Balance]()
-    private static let cacheQueue = DispatchQueue(label: "com.app.currencyCache")
-
     static func isBtc(_ assetId: String?) -> Bool {
         if assetId == nil {
             return true
@@ -23,125 +19,98 @@ extension Balance {
         return WalletManager.current?.info(for: assetId)
     }
 
-    static func from(details: [String: Any]) -> Balance? {
-        do {
-            // convert
-            guard var res = try session?.convertAmount(input: details) else {
-                // return cached value
-                return nil
-            }
-            // normalize outputs
-            res["asset_info"] = details["asset_info"]
-            res["asset_id"] = details["asset_id"]
-            if res.keys.contains(AssetInfo.lightningId) {
-                res[AssetInfo.lightningId] = details["btc"]
-            }
-            // serialize balance
-            var balance = Balance.from(res) as? Balance
-            if let assetId = balance?.assetInfo?.assetId,
-               let value = res[assetId] as? String {
-                balance?.asset = [assetId: value]
-            }
-            // store cache balance
-            if let balance {
-                let assetId = details["asset_id"] as? String
-                let req = BalanceRequest(satoshi: balance.satoshi, assetId: assetId)
-                cacheQueue.async {
-                    cache[req.hashValue] = balance
-                }
-            }
-            return balance
-        } catch {
-            // Return cached result if available
-            if let satoshi = details["satoshi"] as? Int64 {
-                let assetId = details["asset_id"] as? String
-                let req = BalanceRequest(satoshi: satoshi, assetId: assetId)
-                var cachedResult: Balance?
-                cacheQueue.sync {
-                    cachedResult = cache[req.hashValue]
-                }
-                return cachedResult
-            }
-            return nil
-        }
+    static func convert(_ balance: Balance) -> Balance? {
+        return try? WalletManager.current?.converter?.convertAmount(balance: balance)
     }
 
-    static func fromFiat(_ fiat: String) -> Balance? {
+    static func fromFiat(_ fiat: String, assetId: String) -> Balance? {
         let fiat = fiat.unlocaleFormattedString()
-        let details: [String: Any] = ["fiat": fiat]
-        return Balance.from(details: details)
+        if AssetInfo.baseIds.contains(assetId) {
+            let balance = Balance(fiat: fiat, assetId: assetId)
+            return Balance.convert(balance)
+        } else {
+            let balance = Balance(fiat: fiat, assetInfo: getAsset(assetId), assetId: assetId)
+            return Balance.convert(balance)
+        }
     }
 
     static func from(_ value: String, assetId: String, denomination: DenominationType? = nil) -> Balance? {
+        let value = value.unlocaleFormattedString()
         if AssetInfo.baseIds.contains(assetId) {
-            return fromDenomination(value, assetId: assetId, denomination: denomination)
+            let session = WalletManager.current?.prominentSession
+            let denomination = denomination ?? session?.settings?.denomination ?? .BTC
+            let balance = Balance.fromBtcDenomination(value: value, denomination: denomination, assetId: assetId)
+            return Balance.convert(balance ?? Balance(assetId: assetId, assetValue: value))
+        } else {
+            let balance = Balance(assetInfo: getAsset(assetId), assetId: assetId, assetValue: value)
+            return Balance.convert(balance)
         }
-        return fromValue(value, assetId: assetId)
     }
 
-    static func fromDenomination(_ value: String, assetId: String, denomination: DenominationType? = nil) -> Balance? {
-        let value = value.unlocaleFormattedString()
-        let denomination = denomination ?? session?.settings?.denomination
-        let details: [String: Any] = [denomination?.rawValue ?? Balance.session?.gdkNetwork.getFeeAsset() ?? "btc": value, "asset_id": assetId]
-        return Balance.from(details: details)
-    }
-
-    static func fromValue(_ value: String, assetId: String) -> Balance? {
-        let value = value.unlocaleFormattedString()
-        var details: [String: Any] = [assetId: value,
-                                      "asset_id": assetId]
-        if let asset = getAsset(assetId), !isBtc(assetId) {
-            details["asset_info"] = asset.encode()
+    static private func fromBtcDenomination(value: String, denomination: DenominationType, assetId: String) -> Balance? {
+        switch denomination {
+        case .BTC:
+            return Balance(btc: value, assetId: assetId)
+        case .MilliBTC:
+            return Balance(mbtc: value, assetId: assetId)
+        case .MicroBTC:
+            return Balance(ubtc: value, assetId: assetId)
+        case .Bits:
+            return Balance(bits: value, assetId: assetId)
+        case .Sats:
+            return Balance(sats: value, assetId: assetId)
         }
-        return Balance.from(details: details)
-    }
-
-    static func fromSatoshi(_ satoshi: Any, assetId: String) -> Balance? {
-        var details: [String: Any] = ["satoshi": satoshi]
-        if let asset = getAsset(assetId), assetId != "btc" {
-            details["asset_id"] = assetId
-            details["asset_info"] = asset.encode()
-        }
-        return Balance.from(details: details)
     }
 
     static func fromSatoshi(_ satoshi: UInt64, assetId: String) -> Balance? {
-        return Balance.fromSatoshi(Int64(satoshi), assetId: assetId)
+        fromSatoshi(Int64(satoshi), assetId: assetId)
     }
-
-    func toFiat() -> (String, String) {
-        let mainnet = AccountsRepository.shared.current?.gdkNetwork.mainnet
-        if let asset = assetInfo, !AssetInfo.baseIds.contains(asset.assetId) {
-            return ("", "")
+    static func fromSatoshi(_ satoshi: Int64, assetId: String) -> Balance? {
+        if assetId == AssetInfo.btcId {
+            let balance = Balance(satoshi: satoshi)
+            return Balance.convert(balance)
+        } else if let asset = getAsset(assetId) {
+            let balance = Balance(satoshi: satoshi, assetInfo: asset, assetId: assetId)
+            return Balance.convert(balance)
         } else {
-            return (fiat?.localeFormattedString(2) ?? "n/a", mainnet ?? true ? fiatCurrency : "FIAT")
+            let balance = Balance(satoshi: satoshi, assetId: assetId)
+            return Balance.convert(balance)
         }
     }
 
+    func toFiat() -> (String, String) {
+        guard let value = WalletManager.current?.converter?.formatFiat(self, withCurrency: false) else {
+            if self.assetId == nil {
+                return ("n/a", self.fiatCurrency ?? "")
+            }
+            return ("", "")
+        }
+        return (value, self.fiatCurrency ?? "")
+    }
+
     func toDenom(_ denomination: DenominationType? = nil) -> (String, String) {
-        let denomination = denomination ?? Balance.session?.settings?.denomination ?? .BTC
-        let res = try? JSONSerialization.jsonObject(with: JSONEncoder().encode(self), options: .allowFragments) as? [String: Any]
-        let value = res![denomination.rawValue] as? String
+        let session = WalletManager.current?.prominentSession
+        let denomination = denomination ?? session?.settings?.denomination ?? .BTC
         let network: NetworkSecurityCase = {
             switch assetId {
             case AssetInfo.lbtcId: return .liquidSS
             case AssetInfo.ltestId: return .testnetLiquidSS
             case AssetInfo.lightningId: return .lightning
-            default: return Balance.session?.gdkNetwork.mainnet ?? true ? .bitcoinSS : .testnetSS
+            default: return session?.gdkNetwork.mainnet ?? true ? .bitcoinSS : .testnetSS
             }
         }()
-        return (value?.localeFormattedString(Int(denomination.digits)) ?? "n/a", denomination.string(for: network.gdkNetwork))
+        let denominationText = denomination.string(for: network.gdkNetwork)
+        let value = WalletManager.current?.converter?.formatBTC(self, denomination: denomination, withDenomination: false)
+        return (value ?? "n/a", denominationText)
     }
 
     func toBTC() -> (String, String) {
-        let denomination: DenominationType = .BTC
-        let res = try? JSONSerialization.jsonObject(with: JSONEncoder().encode(self), options: .allowFragments) as? [String: Any]
-        let value = res![denomination.rawValue] as? String
-        return (value?.localeFormattedString(Int(denomination.digits)) ?? "n/a", denomination.string(for: Balance.session?.gdkNetwork ?? GdkNetworks.bitcoinSS))
+        toDenom(.BTC)
     }
 
     func toAssetValue() -> (String, String) {
-        return (asset?.first?.value.localeFormattedString(Int(assetInfo?.precision ?? 8)) ?? "n/a", assetInfo?.ticker ?? "n/a")
+        let value = WalletManager.current?.converter?.formatAsset(self, withTicker: false)
+        return (value ?? "", self.assetInfo?.ticker ?? "")
     }
 
     func toValue(_ denomination: DenominationType? = nil) -> (String, String) {
@@ -160,38 +129,5 @@ extension Balance {
     func toFiatText() -> String {
         let (amount, currency) = toFiat()
         return "\(amount) \(currency)"
-    }
-}
-
-extension Balance {
-
-    func toInputDenom(inputDenomination: gdk.DenominationType?) -> (String, String) {
-        if let inputDenomination = inputDenomination {
-            let res = try? JSONSerialization.jsonObject(with: JSONEncoder().encode(self), options: .allowFragments) as? [String: Any]
-            let value = res![inputDenomination.rawValue] as? String
-            let network: NetworkSecurityCase = {
-                switch assetId {
-                case AssetInfo.lbtcId: return .liquidSS
-                case AssetInfo.ltestId: return .testnetLiquidSS
-                case AssetInfo.lightningId: return .lightning
-                default: return Balance.session?.gdkNetwork.mainnet ?? true ? .bitcoinSS : .testnetSS
-                }
-            }()
-            return (value?.localeFormattedString(Int(inputDenomination.digits)) ?? "n/a", inputDenomination.string(for: network.gdkNetwork))
-        } else {
-            return toDenom()
-        }
-    }
-
-    func toInputDenominationValue(_ denomination: gdk.DenominationType?) -> (String, String) {
-        if let denomination = denomination {
-            if !Balance.isBtc(assetId) {
-                return toAssetValue()
-            } else {
-                return toInputDenom(inputDenomination: denomination)
-            }
-        } else {
-            return toValue()
-        }
     }
 }

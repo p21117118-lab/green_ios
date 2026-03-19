@@ -94,7 +94,7 @@ development:
     paths:
       - dev
   variables:
-    GDK_COMMIT: latest
+    GDK_COMMIT: "a7c2aa7dfdc2024ba7e53853b27f147456ed26dd"
   script:
     - if [ "$GDK_COMMIT" != "latest" ]; then GDK_OPT="-c $GDK_COMMIT"; fi
     - ./tools/fetch_gdk_binaries.sh $GDK_OPT

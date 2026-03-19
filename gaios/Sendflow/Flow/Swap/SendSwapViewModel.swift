@@ -154,8 +154,8 @@ final class SendSwapViewModel {
     }
     func updateAmountFromText(_ value: String, for position: SwapPositionEnum) {
         let assetId = position == .from ? state.from.assetId : state.to.assetId
-        let balance = state.isFiat ? Balance.fromFiat(value) :
-            Balance.fromDenomination(value, assetId: assetId, denomination: state.denomination)
+        let balance = state.isFiat ? Balance.fromFiat(value, assetId: assetId) :
+            Balance.from(value, assetId: assetId, denomination: state.denomination)
         if let satoshi = balance?.satoshi {
             updateAmount(UInt64(satoshi), for: position)
         } else {

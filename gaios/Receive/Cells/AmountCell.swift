@@ -117,10 +117,10 @@ class AmountCell: UITableViewCell {
 
     func getSatoshi(_ value: String) -> Int64? {
         if model.isFiat {
-            let balance = Balance.fromFiat(value)
+            let balance = Balance.fromFiat(value, assetId: AssetInfo.btcId)
             return balance?.satoshi
         } else {
-            let balance = Balance.fromDenomination(value, assetId: AssetInfo.btcId, denomination: model.inputDenomination)
+            let balance = Balance.from(value, assetId: AssetInfo.btcId, denomination: model.inputDenomination)
             return balance?.satoshi
         }
     }

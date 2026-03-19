@@ -183,11 +183,11 @@ class DialogAmountViewController: KeyboardViewController {
         amountText = amountText.isEmpty ? "0" : amountText
         amountText = amountText.unlocaleFormattedString(8)
         guard let number = Double(amountText), number > 0 else { return nil }
+        let assetId = wallet!.gdkNetwork.getFeeAsset()
         if selectedType == TransactionBaseType.BTC {
-            let assetId = wallet!.gdkNetwork.getFeeAsset()
-            return Balance.fromDenomination(amountText, assetId: assetId)?.satoshi
+            return Balance.from(amountText, assetId: assetId)?.satoshi
         } else {
-            return Balance.fromFiat(amountText)?.satoshi
+            return Balance.fromFiat(amountText, assetId: assetId)?.satoshi
         }
     }
 

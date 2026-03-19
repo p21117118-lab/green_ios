@@ -26,7 +26,7 @@ enum SwapChainName: String {
 }
 extension SwapPositionState {
     var currency: String? {
-        Balance.fromSatoshi(0, assetId: AssetInfo.btcId)?.toFiat().1
+        Balance.fromSatoshi(Int64(0), assetId: AssetInfo.btcId)?.toFiat().1
     }
     var availableFrom: String? {
         guard let available = from.available else { return nil }
