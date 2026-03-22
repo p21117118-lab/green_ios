@@ -19,12 +19,16 @@ class TabViewModel {
     }
 
     private func startObserving() {
-        observationTask = Task {
+        observationTask = Task { [weak self] in
+            guard let self = self else { return }
             // Subscribe to the Actor's multi-subscriber AsyncStream which yields
             // `SubscriberUpdate` (state + optional set of refresh features).
             for await update in await walletDataModel.states() {
-                self.state = update.state
-                self.onUpdate?(update.feature )
+                guard !Task.isCancelled else { break }
+                await MainActor.run { [weak self] in
+                    self?.state = update.state
+                    self?.onUpdate?(update.feature )
+                }
             }
         }
     }

@@ -28,7 +28,14 @@ actor WalletDataModel {
     func states() -> AsyncStream<SubscriberUpdate> {
         let id = UUID()
         return AsyncStream { continuation in
-            Task { await self.addSubscriber(id: id, continuation: continuation) }
+            Task {
+                await self.addSubscriber(id: id, continuation: continuation)
+            }
+            continuation.onTermination = { @Sendable _ in
+                Task { [weak self] in
+                    await self?.removeSubscriber(id: id)
+                }
+            }
         }
     }
 
