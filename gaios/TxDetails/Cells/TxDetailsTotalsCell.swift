@@ -6,12 +6,12 @@ class TxDetailsTotalsCell: UITableViewCell {
 
     @IBOutlet weak var lblSumFeeKey: UILabel!
     @IBOutlet weak var lblSumFeeValue: UILabel!
-    @IBOutlet weak var lblSumAmountKey: UILabel!
-    @IBOutlet weak var lblSumAmountValue: UILabel!
+    @IBOutlet weak var lblSumFeeFiat: UILabel!
     @IBOutlet weak var lblSumTotalKey: UILabel!
     @IBOutlet weak var lblSumTotalValue: UILabel!
     @IBOutlet weak var lblConversion: UILabel!
     @IBOutlet weak var btnInfoFee: UIButton!
+    @IBOutlet weak var totalLine: UIView!
 
     class var identifier: String { return String(describing: self) }
 
@@ -31,26 +31,31 @@ class TxDetailsTotalsCell: UITableViewCell {
         self.onInfoFee = onInfoFee
 
         lblSumFeeValue.text = model.ntwFees
-        lblSumAmountValue.text = model.receive.replacingOccurrences(of: "-", with: "")
         lblSumTotalValue.text = model.totalSpent
-        lblConversion.text = model.conversion
+        lblConversion.text = "≈ " + model.conversion
 
         if model.hideBalance {
             lblSumTotalValue.attributedText = Common.obfuscate(color: .white, size: 16, length: 5)
-            [lblSumAmountValue, lblSumFeeValue, lblConversion].forEach {
+            [lblSumFeeFiat, lblSumFeeValue, lblConversion].forEach {
                 $0.attributedText =  Common.obfuscate(color: UIColor.gW40(), size: 10, length: 5)
+            }
+        }
+        lblSumFeeFiat.text = model.ntwFeesFiat
+        if model.conversion.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            totalLine.isHidden = true
+            [lblSumFeeKey, lblSumFeeValue].forEach {
+                $0?.setStyle(.txtBigger)
             }
         }
     }
 
     func setContent() {
-        lblSumFeeKey.text = "id_network_fee".localized
-        lblSumAmountKey.text = "id_recipient_receives".localized
+        lblSumFeeKey.text = "Total Fees".localized
         lblSumTotalKey.text = "id_total_spent".localized
     }
 
     func setStyle() {
-        [lblSumFeeKey, lblSumFeeValue, lblSumAmountKey, lblSumAmountValue, lblConversion].forEach {
+        [lblSumFeeKey, lblSumFeeFiat, lblSumFeeValue, lblConversion].forEach {
             $0?.setStyle(.txtCard)
         }
         [lblSumTotalKey, lblSumTotalValue].forEach {

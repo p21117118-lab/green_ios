@@ -30,6 +30,12 @@
 		3407F5D62A4AD034005EF8E1 /* LTErrorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3407F5D52A4AD034005EF8E1 /* LTErrorViewController.swift */; };
 		340A5F5428E339E0003D56B1 /* SafeNavigationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 340A5F5328E339E0003D56B1 /* SafeNavigationManager.swift */; };
 		340A5F5628E33F51003D56B1 /* DialogSafeNavigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 340A5F5528E33F51003D56B1 /* DialogSafeNavigationViewController.swift */; };
+		340E11D42F741E5B0069BF8B /* DialogLiquidAssetToFiatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 340E11D32F741E580069BF8B /* DialogLiquidAssetToFiatViewController.swift */; };
+		340E11D62F741E7B0069BF8B /* DialogLiquidAssetToFiatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 340E11D52F741E740069BF8B /* DialogLiquidAssetToFiatViewModel.swift */; };
+		340E11D82F741E980069BF8B /* DialogLiquidAssetToFiatCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 340E11D72F741E890069BF8B /* DialogLiquidAssetToFiatCell.swift */; };
+		340E11DA2F741EAC0069BF8B /* DialogLiquidAssetToFiatFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 340E11D92F741EA50069BF8B /* DialogLiquidAssetToFiatFooter.swift */; };
+		340E11DC2F741EDB0069BF8B /* DialogLiquidAssetToFiatFooter.xib in Resources */ = {isa = PBXBuildFile; fileRef = 340E11DB2F741EDB0069BF8B /* DialogLiquidAssetToFiatFooter.xib */; };
+		340E11DE2F741EFB0069BF8B /* DialogLiquidAssetToFiatCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 340E11DD2F741EFB0069BF8B /* DialogLiquidAssetToFiatCell.xib */; };
 		340EF8D828B3718D001AE87B /* WalletListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 340EF8D628B3718D001AE87B /* WalletListCell.swift */; };
 		340EF8D928B3718D001AE87B /* WalletListCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 340EF8D728B3718D001AE87B /* WalletListCell.xib */; };
 		340F07F02620A6BB0065A986 /* DialogRecoveryHelpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 340F07EF2620A6BB0065A986 /* DialogRecoveryHelpViewController.swift */; };
@@ -1028,6 +1034,12 @@
 		3407F5D52A4AD034005EF8E1 /* LTErrorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LTErrorViewController.swift; sourceTree = "<group>"; };
 		340A5F5328E339E0003D56B1 /* SafeNavigationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafeNavigationManager.swift; sourceTree = "<group>"; };
 		340A5F5528E33F51003D56B1 /* DialogSafeNavigationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DialogSafeNavigationViewController.swift; sourceTree = "<group>"; };
+		340E11D32F741E580069BF8B /* DialogLiquidAssetToFiatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogLiquidAssetToFiatViewController.swift; sourceTree = "<group>"; };
+		340E11D52F741E740069BF8B /* DialogLiquidAssetToFiatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogLiquidAssetToFiatViewModel.swift; sourceTree = "<group>"; };
+		340E11D72F741E890069BF8B /* DialogLiquidAssetToFiatCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogLiquidAssetToFiatCell.swift; sourceTree = "<group>"; };
+		340E11D92F741EA50069BF8B /* DialogLiquidAssetToFiatFooter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogLiquidAssetToFiatFooter.swift; sourceTree = "<group>"; };
+		340E11DB2F741EDB0069BF8B /* DialogLiquidAssetToFiatFooter.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DialogLiquidAssetToFiatFooter.xib; sourceTree = "<group>"; };
+		340E11DD2F741EFB0069BF8B /* DialogLiquidAssetToFiatCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DialogLiquidAssetToFiatCell.xib; sourceTree = "<group>"; };
 		340EF8D628B3718D001AE87B /* WalletListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletListCell.swift; sourceTree = "<group>"; };
 		340EF8D728B3718D001AE87B /* WalletListCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WalletListCell.xib; sourceTree = "<group>"; };
 		340F07EF2620A6BB0065A986 /* DialogRecoveryHelpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogRecoveryHelpViewController.swift; sourceTree = "<group>"; };
@@ -1994,6 +2006,35 @@
 				3407F5D32A4ABC94005EF8E1 /* DialogFeedbackViewController.swift */,
 			);
 			path = DialogFeedback;
+			sourceTree = "<group>";
+		};
+		340E11D02F741DEE0069BF8B /* DialogLiquidAssetToFiat */ = {
+			isa = PBXGroup;
+			children = (
+				340E11D12F741E2B0069BF8B /* Views */,
+				340E11D22F741E330069BF8B /* Cells */,
+				340E11D32F741E580069BF8B /* DialogLiquidAssetToFiatViewController.swift */,
+				340E11D52F741E740069BF8B /* DialogLiquidAssetToFiatViewModel.swift */,
+			);
+			path = DialogLiquidAssetToFiat;
+			sourceTree = "<group>";
+		};
+		340E11D12F741E2B0069BF8B /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				340E11D92F741EA50069BF8B /* DialogLiquidAssetToFiatFooter.swift */,
+				340E11DB2F741EDB0069BF8B /* DialogLiquidAssetToFiatFooter.xib */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		340E11D22F741E330069BF8B /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				340E11D72F741E890069BF8B /* DialogLiquidAssetToFiatCell.swift */,
+				340E11DD2F741EFB0069BF8B /* DialogLiquidAssetToFiatCell.xib */,
+			);
+			path = Cells;
 			sourceTree = "<group>";
 		};
 		34128F9C27391A99002E19F5 /* Receive */ = {
@@ -3363,6 +3404,7 @@
 				3429F80F2F386CE300B15B0E /* DialogSwapJade */,
 				34DFC96E2C085E05005E6B71 /* DialogCustomFee */,
 				34C680E52A72773E00369639 /* DialogInputDenomination */,
+				340E11D02F741DEE0069BF8B /* DialogLiquidAssetToFiat */,
 				34BF09DC2A658B9C00523E4C /* DialogQR */,
 				3407F5D22A4ABC4E005EF8E1 /* DialogFeedback */,
 				345402E02A1E42BF002CB598 /* Dialogdenomination */,
@@ -3940,8 +3982,8 @@
 			children = (
 				816685D12BEBBEB400B03B02 /* SendAddressInputViewModel.swift */,
 				34927BC82971452C00D741DB /* AccountAssetViewModel.swift */,
-				816685D32BEBC12E00B03B02 /* SendAmountViewModel.swift */,
 				346EB27A2BE8BB480043139F /* SendDialogFeeViewModel.swift */,
+				816685D32BEBC12E00B03B02 /* SendAmountViewModel.swift */,
 				816685D92BEE50EF00B03B02 /* SendTxConfirmViewModel.swift */,
 				81B64B7D2ED86F6B00691A87 /* SendLightningViewModel.swift */,
 				81CDF3442BF2D50500AA4C19 /* SendHWConfirmViewModel.swift */,
@@ -5043,6 +5085,7 @@
 				343BC94E2AA702F600F0FEE5 /* GreenPickerCell.xib in Resources */,
 				3458AB10292D1F0B006EC7FB /* AnyAssetCell.xib in Resources */,
 				3488FC69290AE26E00122628 /* BalanceCell.xib in Resources */,
+				340E11DC2F741EDB0069BF8B /* DialogLiquidAssetToFiatFooter.xib in Resources */,
 				347FD0AD25FFA91700BB3FAB /* Home.storyboard in Resources */,
 				3418BAEA2743FA2E00F9B2D0 /* TransactionBarItem.xib in Resources */,
 				340EF8D928B3718D001AE87B /* WalletListCell.xib in Resources */,
@@ -5079,6 +5122,7 @@
 				34145FE72DBB75D900F725E0 /* SelectCountryCell.xib in Resources */,
 				34FE20182A1CADC200301746 /* DialogDetailCell.xib in Resources */,
 				34F36F732E43387200791659 /* TFANetworkSelectCell.xib in Resources */,
+				340E11DE2F741EFB0069BF8B /* DialogLiquidAssetToFiatCell.xib in Resources */,
 				6DD813B322BC58A7002DCC8B /* Assets.storyboard in Resources */,
 				81E56A532C2476870012A5A3 /* QRUnlockFlow.storyboard in Resources */,
 				34FAB33E2D9C2B4100317454 /* PreferenceCell.xib in Resources */,
@@ -5267,6 +5311,7 @@
 				81A5919D2915772E001D1A65 /* MultisigSettings.swift in Sources */,
 				810A75532EF3618F00B47EEB /* TabTransactVM.swift in Sources */,
 				34C680EA2A72779900369639 /* DialogInputDenominationViewModel.swift in Sources */,
+				340E11DA2F741EAC0069BF8B /* DialogLiquidAssetToFiatFooter.swift in Sources */,
 				344D57CF2D71B5E7009725A3 /* TabTransactVC.swift in Sources */,
 				34465BA12D082EF7002E5033 /* GenuineCheckEndViewController.swift in Sources */,
 				586EB69D2EFB1EF200DFAEF6 /* AutoLogoutCell.swift in Sources */,
@@ -5340,6 +5385,7 @@
 				34F36F792E434F9D00791659 /* TFAMethodCell.swift in Sources */,
 				34F57FFF2BA1EA1C00DCB076 /* TxDetailsStatusCellModel.swift in Sources */,
 				34CF91D92A31BE8200498B08 /* RecoveryTransactionsViewController.swift in Sources */,
+				340E11D82F741E980069BF8B /* DialogLiquidAssetToFiatCell.swift in Sources */,
 				34A883B92BAB0144004A1826 /* TxDetailsMoreInfoViewController.swift in Sources */,
 				34742D402CE4ABA30064F327 /* AssetToBuyCellModel.swift in Sources */,
 				34D761362A38501F00DE57F5 /* DenominationExchangeViewController.swift in Sources */,
@@ -5367,6 +5413,7 @@
 				344471C62C478F7C0051957E /* DialogGroupListCellModel.swift in Sources */,
 				348A70E32D89DA8C00490B55 /* OnBoardAppPinViewController.swift in Sources */,
 				3429F8102F386CE300B15B0E /* DialogSwapJadeViewController.swift in Sources */,
+				340E11D62F741E7B0069BF8B /* DialogLiquidAssetToFiatViewModel.swift in Sources */,
 				810F51492F20669100A98B44 /* PaymentTargetParser.swift in Sources */,
 				81C3BC262F269B6800CD4F2D /* SendFlowError.swift in Sources */,
 				346EB2772BE8BB3A0043139F /* SendFeeCellModel.swift in Sources */,
@@ -5586,6 +5633,7 @@
 				34145FE32DBB726700F725E0 /* SelectCountryViewController.swift in Sources */,
 				092C7BD520D599D700F90DF2 /* UIView.swift in Sources */,
 				34F6151F2E4246B4007D38F9 /* TFAViewController.swift in Sources */,
+				340E11D42F741E5B0069BF8B /* DialogLiquidAssetToFiatViewController.swift in Sources */,
 				34145FF02DBB962500F725E0 /* MoreActionsCell.swift in Sources */,
 				344D57C72D71AA5D009725A3 /* WalletTabBar.swift in Sources */,
 				81EA2DCF2B21F3E600A1F924 /* LoginViewModel.swift in Sources */,

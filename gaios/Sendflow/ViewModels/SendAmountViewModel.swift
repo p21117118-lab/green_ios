@@ -130,7 +130,13 @@ class SendAmountViewModel {
         }
        return asset
     }
-
+    var hasPrice: Bool {
+        let fiat = Balance.fromSatoshi(Int64(0), assetId: assetId)?.toFiat().0
+        if (fiat ?? "").isEmpty {
+            return false
+        }
+        return true
+    }
     func loadFees() async {
         await feeEstimator?.refreshFeeEstimates()
     }
@@ -238,6 +244,13 @@ class SendAmountViewModel {
             balance: sendAll || createTx.privateKey != nil ? totalWithoutFee : amount)
     }
 
+    func dialogLiquidAssetToFiatViewModel() -> DialogLiquidAssetToFiatViewModel {
+        return DialogLiquidAssetToFiatViewModel(
+            assetName: assetInfo?.ticker ?? "",
+            assetAmountTxt: amount?.satoshi == 0 ? "" : amountDenomText ?? "",
+            fiatAmountTxt: amount?.satoshi == 0 ? "" : amountFiatText ?? "",
+            isFiat: isFiat)
+    }
     func sendDialogFeeViewModel() -> SendDialogFeeViewModel? {
         SendDialogFeeViewModel(
             transaction: transaction,

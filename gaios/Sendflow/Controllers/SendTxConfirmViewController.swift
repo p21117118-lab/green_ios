@@ -31,11 +31,10 @@ class SendTxConfirmViewController: UIViewController {
 
     @IBOutlet weak var lblSumFeeKey: UILabel!
     @IBOutlet weak var lblSumFeeValue: UILabel!
-    @IBOutlet weak var lblSumAmountKey: UILabel!
-    @IBOutlet weak var lblSumAmountValue: UILabel!
-    @IBOutlet weak var lblSumAmountView: UIView!
     @IBOutlet weak var lblSumTotalKey: UILabel!
     @IBOutlet weak var lblSumTotalValue: UILabel!
+    @IBOutlet weak var lblSumFeeFiat: UILabel!
+    @IBOutlet weak var totalLine: UIView!
     @IBOutlet weak var totalsView: UIStackView!
     @IBOutlet weak var lblConversion: UILabel!
 
@@ -92,8 +91,6 @@ class SendTxConfirmViewController: UIViewController {
 
         lblSumFeeKey.text = "Total fees".localized
         lblSumFeeValue.text = ""
-        lblSumAmountKey.text = "id_recipient_receives".localized
-        lblSumAmountValue.text = ""
         lblSumTotalKey.text = "id_total_spent".localized
         lblSumTotalValue.text = ""
         lblNoteTitle.text = "id_my_notes".localized
@@ -108,6 +105,7 @@ class SendTxConfirmViewController: UIViewController {
         btnSignViaQr.isHidden = !viewModel.showSignTransactionViaQR()
         squareSliderView.isHidden = !viewModel.showSignTransaction()
         lblAmountSubtitle.text = "You are paying this Lightning invoice with Liquid bitcoin"
+        totalLine.isHidden = !viewModel.hasPrice
     }
 
     func setStyle() {
@@ -123,8 +121,13 @@ class SendTxConfirmViewController: UIViewController {
         [lblAccount1, lblAccount2].forEach {
             $0?.setStyle(.txtCard)
         }
-        [lblSumFeeKey, lblSumFeeValue, lblSumAmountKey, lblSumAmountValue, lblNoteTxt, lblConversion].forEach {
+        [lblSumFeeKey, lblSumFeeValue, lblSumFeeFiat, lblNoteTxt, lblConversion].forEach {
             $0?.setStyle(.txtCard)
+        }
+        if viewModel.hasPrice == false {
+            [lblSumFeeKey, lblSumFeeValue].forEach {
+                $0?.setStyle(.txtBigger)
+            }
         }
         [lblSumTotalKey, lblSumTotalValue].forEach {
             $0?.setStyle(.txtBigger)
@@ -217,7 +220,7 @@ class SendTxConfirmViewController: UIViewController {
     func reload() {
         updateNavigationItem()
         lblAmountValue.text = viewModel.amountText
-        lblAmountFee.text = "≈ \(viewModel.subamountText ?? "")"
+        lblAmountFee.text = viewModel.hasPrice ? "≈ \(viewModel.subamountText ?? "")" : ""
         lblAssetName.text = viewModel.asset?.name ?? viewModel.assetId
         lblAccount1.text = viewModel.subaccount?.localizedName.uppercased()
         lblAccount2.text = viewModel.subaccount?.type.shortText.uppercased()
@@ -225,14 +228,13 @@ class SendTxConfirmViewController: UIViewController {
         iconType.image = networkImage(viewModel.subaccount?.networkType ?? .bitcoinSS)
 
         lblSumFeeValue.text = viewModel.feeText
-        lblSumAmountValue.text = viewModel.amountText
+        lblSumFeeFiat.text = viewModel.feeConvertText
         lblSumTotalValue.text = viewModel.totalText
         lblConversion.text = "≈ \(viewModel?.conversionText ?? "")"
         lblNoteTxt.text = viewModel.note
         totalsView.isHidden = viewModel.isLightning
         noteView.isHidden = viewModel.isLightning && viewModel.note == nil
         noteView.isHidden = viewModel.note?.isEmpty ?? true
-        lblSumAmountView.isHidden = viewModel.recipientReceivesHidden
         amountMultiAddrCard.isHidden = true
         lblAmountSubtitle.isHidden = viewModel.txType != .lwkSwap
 
@@ -271,11 +273,12 @@ class SendTxConfirmViewController: UIViewController {
                 style: .default,
                 truncate: true)
         }
-        if viewModel.assetId != viewModel.session?.gdkNetwork.getFeeAsset() {
-            [lblConversion, lblAmountFee].forEach {
-                $0?.isHidden = true
-            }
-        }
+
+//        if viewModel.assetId != viewModel.session?.gdkNetwork.getFeeAsset() {
+//            [lblConversion, lblAmountFee].forEach {
+//                $0?.isHidden = true
+//            }
+//        }
     }
 
     func networkImage(_ network: NetworkSecurityCase) -> UIImage? {

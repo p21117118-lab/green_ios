@@ -27,9 +27,9 @@ class TransactionCell: UITableViewCell {
 
     func configure(model: TransactionCellModel, hideBalance: Bool, onTap: (() -> Void)?) {
         self.imgView.image = model.icon
-
+        var showDate = true
         var txtCache = ""
-        let registry = WalletManager.current
+        _ = WalletManager.current
         for (idx, amount) in model.amounts.enumerated() {
             if let balance = Balance.fromSatoshi(amount.value, assetId: amount.key) {
                 let (value, denom) = balance.toValue()
@@ -52,16 +52,42 @@ class TransactionCell: UITableViewCell {
                                                 hideBalance: hideBalance,
                                                 style: style))
             }
+            if let fiat = Balance.fromSatoshi(amount.value, assetId: amount.key)?.toFiatText(),
+               showPerAsset(amount.key, model) {
+                if !fiat.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                    // exist pricing for this non base asset
+                    var txtLeft = ""
+                    if model.amounts.count == 1 {
+                        // add date only once
+                        txtLeft = model.statusUI().label
+                        showDate = false
+                    }
+                    addStackRow(
+                        MultiLabelViewModel(
+                            txtLeft: txtLeft,
+                            txtRight: fiat,
+                            hideBalance: hideBalance,
+                            style: model.statusUI().style))
+                }
+            }
         }
-        let satoshi = model.assetAmountList.satoshi()
-        let policyAsset = model.subaccount?.gdkNetwork.policyAsset ?? AssetInfo.btcId
-        let fiat = Balance.fromSatoshi(satoshi, assetId: policyAsset)?.toFiatText()
-        addStackRow(
-            MultiLabelViewModel(
-                txtLeft: model.statusUI().label,
-                txtRight: satoshi != 0 ? fiat : nil,
-                hideBalance: hideBalance,
-                style: model.statusUI().style))
+        if showDate || model.amounts.count > 1 {
+            // for base assets and multi asset txs add always the date below
+            let satoshi = model.assetAmountList.satoshi()
+            let policyAsset = model.subaccount?.gdkNetwork.policyAsset ?? AssetInfo.btcId
+            let fiat = Balance.fromSatoshi(satoshi, assetId: policyAsset)?.toFiatText()
+            // hide fiat value for multi asset liquid (swaps)
+            var txtRight = ""
+            if model.amounts.count == 1 {
+                txtRight = (satoshi != 0 ? fiat : nil) ?? ""
+            }
+            addStackRow(
+                MultiLabelViewModel(
+                    txtLeft: model.statusUI().label,
+                    txtRight: txtRight,
+                    hideBalance: hideBalance,
+                    style: model.statusUI().style))
+        }
         if !(model.tx.memo?.isEmpty ?? true) {
             if let row = Bundle.main.loadNibNamed("SingleLabelView", owner: self, options: nil)?.first as? SingleLabelView {
                 row.configure(model.tx.memo ?? "")
@@ -72,7 +98,21 @@ class TransactionCell: UITableViewCell {
         activity.isHidden = true
         self.onTap = onTap
     }
-
+    func showPerAsset(_ asset: String, _ model: TransactionCellModel) -> Bool {
+        // base assets: [btcId, testId, lbtcId, ltestId, lightningId]
+        if asset == AssetInfo.btcId ||
+            asset == AssetInfo.testId ||
+            asset == AssetInfo.lightningId {
+            return false
+        }
+        if model.amounts.count == 1 && (asset != AssetInfo.lbtcId && asset != AssetInfo.ltestId) {
+            return true
+        }
+        if model.amounts.count > 1 {
+            return true
+        }
+        return false
+    }
     func addStackRow(_ model: MultiLabelViewModel) {
         if let row = Bundle.main.loadNibNamed("MultiLabelView", owner: self, options: nil)?.first as? MultiLabelView {
             row.configure(model)

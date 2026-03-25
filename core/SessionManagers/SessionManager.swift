@@ -87,9 +87,6 @@ public class SessionManager {
             paused = false
             session?.setNotificationHandler(notificationCompletionHandler: newNotification)
             var params = GdkSettings.read()?.toNetworkParams(network).toDict()
-            if network == "electrum-liquid" {
-                params?["price_url"] = "https://green-liquid-testnet.blockstream.com/prices"
-            }
             try session?.connect(netParams: params ?? [:])
             connected = true
         } catch {

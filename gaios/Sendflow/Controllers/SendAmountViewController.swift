@@ -128,10 +128,11 @@ class SendAmountViewController: KeyboardViewController {
             }
 
         }
-        if viewModel.assetId != viewModel.session?.gdkNetwork.getFeeAsset() {
-            [lblFiat, btnDenomination, lblConversion].forEach {
+//        if viewModel.assetId != viewModel.session?.gdkNetwork.getFeeAsset() {
+        if viewModel.hasPrice == false {
+             [lblFiat, btnDenomination, lblConversion].forEach {
                 $0?.isHidden = true
-            }
+             }
         }
         [changeSpeedView, neworkFeeView].forEach {
             $0.isHidden = !viewModel.showFeesInTotals
@@ -400,15 +401,25 @@ class SendAmountViewController: KeyboardViewController {
 
     @IBAction func btnDenomination(_ sender: Any) {
         // Disable for liquid asset
-        if viewModel.assetId != viewModel.session?.gdkNetwork.getFeeAsset() {
-            return
-        }
-        let storyboard = UIStoryboard(name: "Dialogs", bundle: nil)
-        if let vc = storyboard.instantiateViewController(withIdentifier: "DialogInputDenominationViewController") as? DialogInputDenominationViewController {
-            vc.viewModel = viewModel.dialogInputDenominationViewModel()
-            vc.delegate = self
-            vc.modalPresentationStyle = .overFullScreen
-            present(vc, animated: false, completion: nil)
+//        if viewModel.assetId != viewModel.session?.gdkNetwork.getFeeAsset() {
+//            return
+//        }
+        if AssetInfo.baseIds.contains(viewModel.assetId) {
+            let storyboard = UIStoryboard(name: "Dialogs", bundle: nil)
+            if let vc = storyboard.instantiateViewController(withIdentifier: "DialogInputDenominationViewController") as? DialogInputDenominationViewController {
+                vc.viewModel = viewModel.dialogInputDenominationViewModel()
+                vc.delegate = self
+                vc.modalPresentationStyle = .overFullScreen
+                present(vc, animated: false, completion: nil)
+            }
+        } else {
+            let storyboard = UIStoryboard(name: "Dialogs", bundle: nil)
+            if let vc = storyboard.instantiateViewController(withIdentifier: "DialogLiquidAssetToFiatViewController") as? DialogLiquidAssetToFiatViewController {
+                vc.viewModel = viewModel.dialogLiquidAssetToFiatViewModel()
+                vc.delegate = self
+                vc.modalPresentationStyle = .overFullScreen
+                present(vc, animated: false, completion: nil)
+            }
         }
     }
 
@@ -537,6 +548,15 @@ class SendAmountViewController: KeyboardViewController {
         if sats < minWithDrawAmount { return .minInvalid }
         return .valid
     }
+
+    func onLiquidAssetFiatChange() {
+        reloadAmount()
+        reloadBalance()
+        reloadFee()
+        reloadTotal()
+        reloadNavigationBar()
+        reloadDenomination()
+    }
 }
 
 extension SendAmountViewController: DialogInputDenominationViewControllerDelegate {
@@ -613,5 +633,15 @@ extension SendAmountViewController: UITextFieldDelegate {
             return false
         }
         return true
+    }
+}
+extension SendAmountViewController: DialogLiquidAssetToFiatViewControllerDelegate {
+    func didSelectLiquidAsset() {
+        viewModel.isFiat = false
+        onLiquidAssetFiatChange()
+    }
+    func didSelectFiatConversion() {
+        viewModel.isFiat = true
+        onLiquidAssetFiatChange()
     }
 }

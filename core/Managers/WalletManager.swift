@@ -856,14 +856,14 @@ extension WalletManager: AssetsProvider {
 extension WalletManager: ConverterProvider {
     public func convertBitcoinAmount(params: gdk.Balance) throws -> gdk.Balance? {
         guard let session = activeBitcoinSessions.first ?? prominentSession else {
-            return nil
+            throw GaError.SessionLost()
         }
         return try convert(session: session, params: params)
     }
 
     func convert(session: SessionManager, params: gdk.Balance) throws -> gdk.Balance? {
         guard var input = params.toDict() else {
-            return nil
+            throw GaError.GenericError("Conversion error")
         }
         // normalize for asset info
         if let assetId = params.assetId {
@@ -877,7 +877,7 @@ extension WalletManager: ConverterProvider {
         // call convert amount
         let res = try session.convertAmount(input: input)
         guard var balance = Balance.from(res) as? Balance else {
-            return nil
+            throw GaError.GenericError("Conversion error")
         }
         // normalize result for assets
         if let assetId = params.assetId {
@@ -891,10 +891,10 @@ extension WalletManager: ConverterProvider {
         }
         return balance
     }
-    
+
     public func convertLiquidAmount(params: gdk.Balance) throws -> gdk.Balance? {
         guard let session = activeLiquidSessions.first else {
-            return nil
+            throw GaError.SessionLost()
         }
         return try convert(session: session, params: params)
     }

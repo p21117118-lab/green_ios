@@ -53,7 +53,7 @@ public struct Balance: Codable {
             obj.asset?[assetId] = assetValue
         }
         if let data = try? JSONEncoder().encode(obj) {
-            let res = try? JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String: Any]
+            return try? JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String: Any]
         }
         return nil
     }

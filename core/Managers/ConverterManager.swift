@@ -18,6 +18,7 @@ public class ConverterManager {
         formatter.minimumFractionDigits = 0
         formatter.maximumFractionDigits = 2
         formatter.locale = .current
+        formatter.currencySymbol = "" 
         return formatter
     }()
 
@@ -45,17 +46,10 @@ public class ConverterManager {
     }
 
     public func convertAmount(balance: Balance) throws -> Balance? {
-        let start = CFAbsoluteTimeGetCurrent()
         if AssetInfo.baseIds.contains(balance.assetId ?? AssetInfo.btcId) {
-            let res = try? provider.convertBitcoinAmount(params: balance)
-            let end = CFAbsoluteTimeGetCurrent()
-            print("Convert amount btc time: \(end - start) seconds")
-            return res
+            return try provider.convertBitcoinAmount(params: balance)
         } else {
-            let res = try? provider.convertLiquidAmount(params: balance)
-            let end = CFAbsoluteTimeGetCurrent()
-            print("Convert amount \(balance.assetId ?? "") time: \(end - start) seconds")
-            return res
+            return try provider.convertLiquidAmount(params: balance)
         }
     }
 
@@ -79,7 +73,8 @@ public class ConverterManager {
         guard let fiat = b.fiat, let val = Double(fiat) else {
             return nil
         }
-        let formatter = btcFormatter
+        let formatter = (fiatFormatter.copy() as? NumberFormatter) ?? fiatFormatter
+        formatter.usesGroupingSeparator = withGroupSeparator
         if !withGroupSeparator {
             formatter.groupingSeparator = ""
         }
@@ -93,7 +88,8 @@ public class ConverterManager {
         guard let rawValue = getBtcFromBalance(b, denomination), let val = Double(rawValue) else {
             return nil
         }
-        let formatter = btcFormatter
+        let formatter = (btcFormatter.copy() as? NumberFormatter) ?? btcFormatter
+        formatter.usesGroupingSeparator = withGroupSeparator
         if !withGroupSeparator {
             formatter.groupingSeparator = ""
         }
@@ -114,6 +110,7 @@ public class ConverterManager {
             return nil
         }
         let formatter = assetFormatter(precision: Int(b.assetInfo?.precision ?? 8))
+        formatter.usesGroupingSeparator = withGroupSeparator
         if !withGroupSeparator {
             formatter.groupingSeparator = ""
         }

@@ -35,8 +35,7 @@ class TxDetailsAmountCell: UITableViewCell {
             lblAmount.attributedText = formatAmount(amount)
             lblAsset.text = denom
             let (fiat, curr) = balance.toFiat()
-            lblFiat.text = "≈ \(fiat) \(curr)"
-            lblFiat.isHidden = model.id != model.tx.feeAsset
+            lblFiat.text = (!fiat.isEmpty && !curr.isEmpty) ? "≈ \(fiat) \(curr)" : ""
             if model.hideBalance {
                 lblAmount.attributedText = Common.obfuscate(color: .white, size: 14, length: 5)
                 lblAsset.attributedText = Common.obfuscate(color: UIColor.gAccent(), size: 10, length: 3)

@@ -109,6 +109,7 @@ class SendTxConfirmViewModel {
     var amountText: String? { isFiat ? amountFiatText : amountDenomText }
     var subamountText: String? { isFiat ? amountDenomText : amountFiatText}
     var feeText: String? { isFiat ? feeFiatText : feeDenomText }
+    var feeConvertText: String? { !isFiat ? feeFiatText : feeDenomText }
     var totalText: String? { isFiat ? totalFiatText : totalDenomText }
     var conversionText: String? { isFiat ? totalDenomText : totalFiatText }
     var addressTitle: String { isLightning ? "id_recipient".localized : isConsolitating ? "id_your_redeposit_address".localized : "id_address".localized }
@@ -134,7 +135,13 @@ class SendTxConfirmViewModel {
     func needExportPsbt() -> Bool {
         wm?.isWatchonly ?? false && session?.networkType.singlesig ?? false && txType != .sweep && signedPsbt == nil
     }
-
+    var hasPrice: Bool {
+        let fiat = Balance.fromSatoshi(Int64(0), assetId: assetId)?.toFiat().0
+        if (fiat ?? "").isEmpty {
+            return false
+        }
+        return true
+    }
     private func sendTx() async throws -> SendTransactionSuccess {
         guard let session = session,
               var tx = transaction else {

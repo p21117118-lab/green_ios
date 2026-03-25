@@ -53,14 +53,7 @@ class TxDetailsViewModel {
     }
 
     var showTotals: Bool {
-        if !transaction.isLightning && transaction.type == .outgoing && assetAmountList.amounts.count == 1 {
-            let amount: (String, Int64) = assetAmountList.amounts[0]
-            let assetId = transaction.subaccount?.gdkNetwork.getFeeAsset() ?? "btc"
-            if amount.0 == assetId {
-                return true
-            }
-        }
-        return false
+        return !transaction.isLightning && transaction.type == .outgoing /* && assetAmountList.amounts.count == 1 */
     }
 
     var txDetailsTotalsCellModels: [TxDetailsTotalsCellModel] {
@@ -70,33 +63,36 @@ class TxDetailsViewModel {
         var totalSpent: String?
         var conversion: String?
         var ntwFees: String?
-        var receive: String?
+        var ntwFeesFiat: String?
+        let receive = ""
 
-        let amount: (String, Int64) = assetAmountList.amounts[0]
+        // btc, lbtc case
+        guard let amount: (String, Int64) = assetAmountList.amounts.first else {
+            return items
+        }
         let assetId = transaction.subaccount?.gdkNetwork.getFeeAsset() ?? "btc"
-        if amount.0 == assetId {
+//        if amount.0 == assetId {
             let tSpent = abs(amount.1)
-            if let balance = Balance.fromSatoshi(tSpent, assetId: assetId) {
+            if let balance = Balance.fromSatoshi(tSpent, assetId: amount.0) {
                 let (amount, denom) = balance.toValue()
                 let (fiat, fiatCurrency) = balance.toFiat()
                 totalSpent = "\(amount) \(denom)"
-                conversion = "≈ \(fiat) \(fiatCurrency)"
+                conversion = "\(fiat) \(fiatCurrency)"
             }
             if let balance = Balance.fromSatoshi(transaction.fee ?? 0, assetId: assetId) {
                 let (amount, denom) = balance.toValue()
                 ntwFees = "\(amount) \(denom)"
             }
-            let spent = abs(amount.1) - Int64(transaction.fee ?? 0)
-            if let balance = Balance.fromSatoshi(spent, assetId: assetId) {
-                let (amount, denom) = balance.toValue()
-                receive = "\(amount) \(denom)"
+            if let balance = Balance.fromSatoshi(transaction.fee ?? 0, assetId: assetId) {
+                let (fiat) = balance.toFiatText()
+                ntwFeesFiat = "\(fiat)"
             }
-        }
 
-        if let totalSpent = totalSpent, let conversion = conversion, let ntwFees = ntwFees, let receive = receive {
+        if let totalSpent = totalSpent, let conversion = conversion, let ntwFees = ntwFees {
             items.append(TxDetailsTotalsCellModel(totalSpent: totalSpent,
                                                   conversion: conversion,
                                                   ntwFees: ntwFees,
+                                                  ntwFeesFiat: ntwFeesFiat ?? "",
                                                   receive: receive,
                                                   hideBalance: hideBalance))
         }
@@ -141,19 +137,14 @@ class TxDetailsViewModel {
 
                 items.append(TxDetailsInfoCellModel(title: "id_network_fees".localized, hint: str, type: .fee, hideBalance: hideBalance))
             }
-
-            // fee rate
-//            if transaction.isLightning {} else {
-//                items.append(TxDetailsInfoCellModel(title: "id_fee_rate".localized, hint: "\(String(format: "%.2f satoshi / vbyte", Double(transaction.feeRate) / 1000))", type: .feeRate, hideBalance: hideBalance))
-//            }
         }
 
         // transaction Id
         if !transaction.isLightning {
-//            items.append(TxDetailsInfoCellModel(title: "id_transaction_id".localized,
-//                                                hint: transaction.hash ?? "",
-//                                                type: .txId,
-//                                                hideBalance: hideBalance))
+            items.append(TxDetailsInfoCellModel(title: "id_transaction_id".localized,
+                                                hint: transaction.hash ?? "",
+                                                type: .txId,
+                                                hideBalance: hideBalance))
         }
 
         // note
@@ -214,7 +205,7 @@ class TxDetailsViewModel {
                                          action: .addNote)
             )
         }
-        if (transaction.isLightning) {} else {
+        if transaction.isLightning {} else {
             models.append(
                 TxDetailsActionCellModel(icon: UIImage(named: "ic_tx_action_explorer")!.maskWithColor(color: UIColor.gAccent()),
                                          title: "id_view_in_explorer".localized,
@@ -255,9 +246,9 @@ class TxDetailsViewModel {
     }
 
     func address(_ tx: Transaction) -> String? {
-        if tx.isLiquid {
-            return nil
-        }
+//        if tx.isLiquid {
+//            return nil
+//        }
         if tx.isLightning {
             if tx.isRefundableSwap ?? false || tx.isInProgressSwap ?? false {
                 return tx.inputs?.first?.address
