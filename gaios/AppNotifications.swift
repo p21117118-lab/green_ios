@@ -21,6 +21,7 @@ class AppNotifications: NSObject {
 
     func didRegisterForRemoteNotificationsWithDeviceToken(deviceToken: Data) {
         logger.info("Device Token: \(deviceToken)")
+        Messaging.messaging().apnsToken = deviceToken
     }
 
     
