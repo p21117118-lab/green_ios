@@ -71,7 +71,7 @@ class TxDetailsViewModel {
             return items
         }
         let assetId = transaction.subaccount?.gdkNetwork.getFeeAsset() ?? "btc"
-//        if amount.0 == assetId {
+        if assetAmountList.amounts.count == 1 {
             let tSpent = abs(amount.1)
             if let balance = Balance.fromSatoshi(tSpent, assetId: amount.0) {
                 let (amount, denom) = balance.toValue()
@@ -87,7 +87,7 @@ class TxDetailsViewModel {
                 let (fiat) = balance.toFiatText()
                 ntwFeesFiat = "\(fiat)"
             }
-
+        }
         if let totalSpent = totalSpent, let conversion = conversion, let ntwFees = ntwFees {
             items.append(TxDetailsTotalsCellModel(totalSpent: totalSpent,
                                                   conversion: conversion,
