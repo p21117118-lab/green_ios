@@ -231,6 +231,10 @@ class SendTxConfirmViewController: UIViewController {
         lblSumFeeFiat.text = viewModel.feeConvertText
         lblSumTotalValue.text = viewModel.totalText
         lblConversion.text = "≈ \(viewModel?.conversionText ?? "")"
+        if viewModel.isAssetWithPrice {
+            lblSumTotalValue.text = viewModel.totalFiatForPricedAsset
+            lblConversion.isHidden = true
+        }
         lblNoteTxt.text = viewModel.note
         totalsView.isHidden = viewModel.isLightning
         noteView.isHidden = viewModel.isLightning && viewModel.note == nil

@@ -137,6 +137,7 @@ class SendAmountViewController: KeyboardViewController {
         [changeSpeedView, neworkFeeView].forEach {
             $0.isHidden = !viewModel.showFeesInTotals
         }
+        totalsView.isHidden = true
     }
 
     func reloadWithDraw() {

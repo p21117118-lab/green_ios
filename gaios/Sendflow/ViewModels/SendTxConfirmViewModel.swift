@@ -142,6 +142,16 @@ class SendTxConfirmViewModel {
         }
         return true
     }
+    var isAssetWithPrice: Bool {
+        !AssetInfo.baseIds.contains(assetId) && hasPrice
+    }
+    var totalFiatForPricedAsset: String {
+        if let balance = Balance.fromSatoshi( isWithdraw ? Int64(withdrawAmount) : Int64(satoshi ?? 0), assetId: assetId), let amount = Double(balance.fiat ?? ""), let feeBalance =  Balance.fromSatoshi(transaction?.fee ?? 0, assetId: transaction?.feeAsset ?? "btc"), let fee = Double(feeBalance.fiat ?? ""), let feeCurr = feeBalance.fiatCurrency {
+            let totalFiat = amount + fee
+            return "\(String(format: "%.2f", totalFiat)) \(feeCurr)"
+        }
+        return ""
+    }
     private func sendTx() async throws -> SendTransactionSuccess {
         guard let session = session,
               var tx = transaction else {

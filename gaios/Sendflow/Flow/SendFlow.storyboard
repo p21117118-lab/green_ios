@@ -200,7 +200,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="127.2" y="-28.817733990147783"/>
+            <point key="canvasLocation" x="-534" y="-214"/>
         </scene>
         <!--Send Amount View Controller-->
         <scene sceneID="420-Xh-IWC">
@@ -826,7 +826,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hv5-z0-mfH" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="800.76335877862596" y="-28.52112676056338"/>
+            <point key="canvasLocation" x="-535" y="646"/>
         </scene>
         <!--Send Tx Confirm View Controller-->
         <scene sceneID="77v-Sl-okJ">
@@ -2264,6 +2264,7 @@
                         <outlet property="addressTextView" destination="L0U-MD-Jp2" id="08x-SU-6c1"/>
                         <outlet property="anchorBottom" destination="7KM-UV-r8h" id="qwD-U8-Rj0"/>
                         <outlet property="cardView" destination="9mt-bq-PSG" id="wh7-8k-PIH"/>
+                        <outlet property="divider" destination="TUs-hy-S3l" id="Nu7-ey-jOz"/>
                         <outlet property="handle" destination="Eaq-qU-zU0" id="wnK-x0-yY6"/>
                         <outlet property="icWallet" destination="wk9-T0-9Zg" id="iAU-QL-XwC"/>
                         <outlet property="lblAddressTitle" destination="2QC-U3-IaJ" id="w5w-Dc-cx1"/>
@@ -2280,6 +2281,7 @@
                         <outlet property="recipientReceiveView" destination="541-xr-pfV" id="ouk-1i-uBE"/>
                         <outlet property="scrollView" destination="tqZ-NL-ffR" id="h94-p7-uOT"/>
                         <outlet property="tappableBg" destination="SUU-82-8mY" id="mTu-fz-TRl"/>
+                        <outlet property="totalLine" destination="93D-Mf-TdF" id="wBx-lr-o0b"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="2jM-Zp-pUI" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -5451,7 +5453,7 @@
                                                                 <rect key="frame" x="0.0" y="0.0" width="375" height="68.666666666666671"/>
                                                                 <subviews>
                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="lbl_title" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PwI-Fc-pK2">
-                                                                        <rect key="frame" x="20" y="22.000000000000014" width="335" height="21.666666666666671"/>
+                                                                        <rect key="frame" x="20" y="22" width="335" height="21.666666666666671"/>
                                                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                                                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                         <nil key="highlightedColor"/>

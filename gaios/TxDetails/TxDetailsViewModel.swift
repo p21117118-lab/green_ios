@@ -66,18 +66,17 @@ class TxDetailsViewModel {
         var ntwFeesFiat: String?
         let receive = ""
 
-        // btc, lbtc case
-        guard let amount: (String, Int64) = assetAmountList.amounts.first else {
+        guard let amountObj: (String, Int64) = assetAmountList.amounts.first else {
             return items
         }
         let assetId = transaction.subaccount?.gdkNetwork.getFeeAsset() ?? "btc"
         if assetAmountList.amounts.count == 1 {
-            let tSpent = abs(amount.1)
-            if let balance = Balance.fromSatoshi(tSpent, assetId: amount.0) {
+            let tSpent = abs(amountObj.1)
+            if let balance = Balance.fromSatoshi(tSpent, assetId: amountObj.0) {
                 let (amount, denom) = balance.toValue()
                 let (fiat, fiatCurrency) = balance.toFiat()
                 totalSpent = "\(amount) \(denom)"
-                conversion = "\(fiat) \(fiatCurrency)"
+                conversion = "\(fiat) \(fiatCurrency)".trimmingCharacters(in: .whitespaces)
             }
             if let balance = Balance.fromSatoshi(transaction.fee ?? 0, assetId: assetId) {
                 let (amount, denom) = balance.toValue()
@@ -87,6 +86,12 @@ class TxDetailsViewModel {
                 let (fiat) = balance.toFiatText()
                 ntwFeesFiat = "\(fiat)"
             }
+            if !AssetInfo.baseIds.contains(amountObj.0) {
+                if let balance = Balance.fromSatoshi(tSpent, assetId: amountObj.0), let amount = Double(balance.fiat ?? ""), let feeBalance =  Balance.fromSatoshi(transaction.fee ?? 0, assetId: assetId), let fee = Double(feeBalance.fiat ?? ""), let feeCurr = feeBalance.fiatCurrency {
+                    let totalFiat = amount + fee
+                    totalSpent = "\(String(format: "%.2f", totalFiat)) \(feeCurr)"
+                }
+            }
         }
         if let totalSpent = totalSpent, let conversion = conversion, let ntwFees = ntwFees {
             items.append(TxDetailsTotalsCellModel(totalSpent: totalSpent,
@@ -94,6 +99,7 @@ class TxDetailsViewModel {
                                                   ntwFees: ntwFees,
                                                   ntwFeesFiat: ntwFeesFiat ?? "",
                                                   receive: receive,
+                                                  assetId: amountObj.0,
                                                   hideBalance: hideBalance))
         }
         return items

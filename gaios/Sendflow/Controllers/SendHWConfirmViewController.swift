@@ -26,7 +26,9 @@ class SendHWConfirmViewController: UIViewController {
     @IBOutlet weak var recipientReceiveView: UIView!
     @IBOutlet weak var multiAddrView: UIView!
     @IBOutlet weak var lblMultiAddr: UILabel!
-
+    @IBOutlet weak var divider: UIView!
+    @IBOutlet weak var totalLine: UIView!
+    
     var viewModel: SendHWConfirmViewModel!
     var isDismissible = false
     var isQRMode = false
@@ -80,6 +82,9 @@ class SendHWConfirmViewController: UIViewController {
             }
         }
         handle.isHidden = !isDismissible
+        [divider, totalLine, lblConversion].forEach {
+            $0?.isHidden = true
+        }
     }
 
     deinit {
