@@ -145,8 +145,21 @@ class ScreenLocker {
         }
         DispatchQueue.main.async {
             self.clear()
-            let account = AccountsRepository.shared.current
-            AccountNavigator.navLogout(accountId: account?.id)
+            Task { await self.logout() }
+        }
+    }
+    
+    func logout() async {
+        guard let mainAccount = AccountsRepository.shared.current else {
+            return
+        }
+        if mainAccount.isHW {
+            try? await BleHwManager.shared.disconnect()
+        }
+        await WalletsRepository.shared.get(for: mainAccount.id)?.disconnect()
+        WalletsRepository.shared.delete(for: mainAccount.id)
+        await MainActor.run {
+            AccountNavigator.navLogout(accountId: mainAccount.id)
         }
     }
 
