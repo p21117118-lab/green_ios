@@ -107,11 +107,20 @@ public actor SwapMonitor {
                 try await Task.sleep(nanoseconds: 100_000_000)
             case .success:
                 logger.info("LWK \(swapId, privacy: .public) completed successfully!")
-                _ = try await BoltzController.shared.update(with: persistentId, newIsPending: false)
+                let newTxHash: String? = {
+                    switch swap {
+                    case .reverseSubmarine(let swap):
+                        return try? swap.claimTxid()
+                    case .submarine(let swap):
+                        return try? swap.lockupTxid()
+                    case .chain(let swap):
+                        return try? swap.lockupTxid()
+                    }
+                }()
+                _ = try await BoltzController.shared.update(with: persistentId, newIsPending: false, newTxHash: newTxHash)
             case .failed:
                 logger.info("LWK \(swapId, privacy: .public) failed!")
                 _ = try await BoltzController.shared.update(with: persistentId, newIsPending: false)
-                //_ = try await BoltzController.shared.delete(with: persistentId)
             }
             return state
         } catch LwkError.NoBoltzUpdate {
@@ -124,13 +133,9 @@ public actor SwapMonitor {
             }
         } catch LwkError.ObjectConsumed {
             logger.error("LWK \(swapId, privacy: .public) object consumed")
-            //_ = try? await BoltzController.shared.delete(with: persistentId)
-            //_ = try await BoltzController.shared.update(with: persistentId, newIsPending: false)
             return .failed
         } catch {
             logger.error("LWK \(swapId, privacy: .public) unrecoverable error: \(error.localizedDescription, privacy: .public)")
-            //_ = try? await BoltzController.shared.delete(with: persistentId)
-            //_ = try await BoltzController.shared.update(with: persistentId, newIsPending: false)
             return .failed
         }
     }

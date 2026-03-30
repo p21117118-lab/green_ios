@@ -241,28 +241,10 @@ public class LwkSessionManager: SessionManager {
         guard let boltzSession = boltzSession else {
             throw LwkError.Generic(msg: "Invalid session")
         }
-        logger.info("LWK Restoring reverse swaps using address \(liquidAddress)")
         let liquidAddress = try Address(s: liquidAddress)
         let list = try boltzSession.swapRestore()
-        let reverseSwaps = try boltzSession.restorableReverseSwaps(swapList: list, claimAddress: liquidAddress)
-        for reverseSwap in reverseSwaps {
-            let invoice = try boltzSession.restoreInvoice(data: reverseSwap)
-            let swapId = try invoice.swapId()
-            let data = try invoice.serialize()
-            logger.info("LWK Restoring \(swapId)")
-            if let swapDbId = try? await BoltzController.shared.fetchID(byId: swapId) {
-                try? await BoltzController.shared.update(with: swapDbId, newIsPending: true)
-            } else {
-                _ = try? await BoltzController.shared.create(
-                    id: swapId,
-                    data: data,
-                    isPending: true,
-                    xpubHashId: xpubHashId,
-                    invoice: nil,
-                    swapType: SwapType.reverseSwap,
-                    txHash: nil)
-            }
-        }
+        // Reverse Submarine Swaps: avoid to restore reverse submarine swaps for lack of informations to correctly restore them.
+        // Submarine Swaps: restore swaps with lockup transaction and refund liquid address
         logger.info("LWK Restoring submarine swaps using address \(liquidAddress)")
         let submarineSwaps = try boltzSession.restorableSubmarineSwaps(swapList: list, refundAddress: liquidAddress)
         for submarineSwap in submarineSwaps {
@@ -271,7 +253,10 @@ public class LwkSessionManager: SessionManager {
             let data = try pay.serialize()
             logger.info("LWK Restoring \(swapId)")
             if let swapDbId = try? await BoltzController.shared.fetchID(byId: swapId) {
-                try? await BoltzController.shared.update(with: swapDbId, newIsPending: true)
+                try? await BoltzController.shared.update(
+                    with: swapDbId,
+                    newIsPending: true,
+                    newTxHash: try? pay.lockupTxid())
             } else {
                 _ = try? await BoltzController.shared.create(
                     id: swapId,
@@ -280,7 +265,7 @@ public class LwkSessionManager: SessionManager {
                     xpubHashId: xpubHashId,
                     invoice: nil,
                     swapType: SwapType.submarineSwap,
-                    txHash: nil)
+                    txHash: try? pay.lockupTxid())
             }
         }
         logger.info("LWK Restoring swaps using address \(bitcoinAddress)")
@@ -293,7 +278,10 @@ public class LwkSessionManager: SessionManager {
             let data = try lockup.serialize()
             logger.info("LWK Restoring \(swapId)")
             if let swapDbId = try? await BoltzController.shared.fetchID(byId: swapId) {
-                try? await BoltzController.shared.update(with: swapDbId, newIsPending: true)
+                try? await BoltzController.shared.update(
+                    with: swapDbId,
+                    newIsPending: true,
+                    newTxHash: try? lockup.lockupTxid())
             } else {
                 _ = try? await BoltzController.shared.create(
                     id: swapId,
@@ -302,7 +290,7 @@ public class LwkSessionManager: SessionManager {
                     xpubHashId: xpubHashId,
                     invoice: nil,
                     swapType: SwapType.chainSwap,
-                    txHash: nil)
+                    txHash: try? lockup.lockupTxid())
             }
         }
     }
