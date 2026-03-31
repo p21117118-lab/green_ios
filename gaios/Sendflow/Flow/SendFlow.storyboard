@@ -667,13 +667,13 @@
                                                         </connections>
                                                     </button>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="lbl_time" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Azs-Pl-skG">
-                                                        <rect key="frame" x="137" y="16.666666666666629" width="51.666666666666657" height="17"/>
+                                                        <rect key="frame" x="137" y="14.666666666666629" width="51.666666666666657" height="17"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                         <color key="textColor" white="1" alpha="0.40999999999999998" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="lbl_fee_rate" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Bih-8f-pLx">
-                                                        <rect key="frame" x="266" y="16.666666666666629" width="77" height="17"/>
+                                                        <rect key="frame" x="266" y="14.666666666666629" width="77" height="17"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                         <color key="textColor" white="1" alpha="0.40999999999999998" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <nil key="highlightedColor"/>
@@ -681,12 +681,12 @@
                                                 </subviews>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
-                                                    <constraint firstItem="Bih-8f-pLx" firstAttribute="centerY" secondItem="GFN-hg-epW" secondAttribute="centerY" id="0rE-uM-c7K"/>
                                                     <constraint firstAttribute="bottom" secondItem="d3n-9T-2df" secondAttribute="bottom" id="5Eb-ZI-dxy"/>
                                                     <constraint firstItem="d3n-9T-2df" firstAttribute="leading" secondItem="GFN-hg-epW" secondAttribute="leading" id="7Jp-Yz-yDg"/>
                                                     <constraint firstItem="Azs-Pl-skG" firstAttribute="leading" secondItem="d3n-9T-2df" secondAttribute="trailing" constant="5" id="7XN-TQ-Zac"/>
+                                                    <constraint firstItem="Bih-8f-pLx" firstAttribute="centerY" secondItem="Azs-Pl-skG" secondAttribute="centerY" id="Mcl-g2-bBa"/>
                                                     <constraint firstItem="d3n-9T-2df" firstAttribute="top" secondItem="GFN-hg-epW" secondAttribute="top" id="dVI-b9-MNP"/>
-                                                    <constraint firstItem="Azs-Pl-skG" firstAttribute="centerY" secondItem="d3n-9T-2df" secondAttribute="centerY" id="gML-1v-POO"/>
+                                                    <constraint firstItem="Azs-Pl-skG" firstAttribute="centerY" secondItem="d3n-9T-2df" secondAttribute="centerY" constant="-2" id="gML-1v-POO"/>
                                                     <constraint firstAttribute="trailing" secondItem="Bih-8f-pLx" secondAttribute="trailing" id="vmS-rK-G0Q"/>
                                                 </constraints>
                                             </view>
@@ -3859,13 +3859,13 @@
                                                         </connections>
                                                     </button>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="lbl_time" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FrK-bL-3XK">
-                                                        <rect key="frame" x="137" y="16.666666666666629" width="51.666666666666657" height="17"/>
+                                                        <rect key="frame" x="137" y="14.666666666666629" width="51.666666666666657" height="17"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                         <color key="textColor" white="1" alpha="0.40999999999999998" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="lbl_fee_rate" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zkL-1E-mKP">
-                                                        <rect key="frame" x="266" y="16.666666666666629" width="77" height="17"/>
+                                                        <rect key="frame" x="266" y="14.666666666666629" width="77" height="17"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                         <color key="textColor" white="1" alpha="0.40999999999999998" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <nil key="highlightedColor"/>
@@ -3873,8 +3873,8 @@
                                                 </subviews>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
-                                                    <constraint firstItem="FrK-bL-3XK" firstAttribute="centerY" secondItem="K4s-ZC-jDq" secondAttribute="centerY" id="ADV-8g-ks0"/>
-                                                    <constraint firstItem="zkL-1E-mKP" firstAttribute="centerY" secondItem="fJF-we-fOa" secondAttribute="centerY" id="E0D-iV-mD3"/>
+                                                    <constraint firstItem="zkL-1E-mKP" firstAttribute="centerY" secondItem="FrK-bL-3XK" secondAttribute="centerY" id="6Bz-kz-fcg"/>
+                                                    <constraint firstItem="FrK-bL-3XK" firstAttribute="centerY" secondItem="K4s-ZC-jDq" secondAttribute="centerY" constant="-2" id="ADV-8g-ks0"/>
                                                     <constraint firstItem="FrK-bL-3XK" firstAttribute="leading" secondItem="K4s-ZC-jDq" secondAttribute="trailing" constant="5" id="E1j-IV-gxR"/>
                                                     <constraint firstAttribute="trailing" secondItem="zkL-1E-mKP" secondAttribute="trailing" id="GYa-yU-RR8"/>
                                                     <constraint firstItem="K4s-ZC-jDq" firstAttribute="leading" secondItem="fJF-we-fOa" secondAttribute="leading" id="Jz5-Bc-KX1"/>
@@ -4641,7 +4641,7 @@
                                                                                                 <nil key="highlightedColor"/>
                                                                                             </label>
                                                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="lbl_sum_fee_value" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fGg-Cd-bGN">
-                                                                                                <rect key="frame" x="204.33333333333334" y="16.666666666666629" width="120.66666666666666" height="17"/>
+                                                                                                <rect key="frame" x="204.33333333333334" y="16.666666666666742" width="120.66666666666666" height="17"/>
                                                                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                                                                 <color key="textColor" white="1" alpha="0.40999999999999998" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                                                 <nil key="highlightedColor"/>
@@ -4666,7 +4666,7 @@
                                                                                                 <nil key="highlightedColor"/>
                                                                                             </label>
                                                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="lbl_sum_amount_value" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="N3H-lY-ryy">
-                                                                                                <rect key="frame" x="175.66666666666663" y="16.666666666666629" width="149.33333333333337" height="17"/>
+                                                                                                <rect key="frame" x="175.66666666666663" y="16.666666666666742" width="149.33333333333337" height="17"/>
                                                                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                                                                 <color key="textColor" white="1" alpha="0.40999999999999998" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                                                 <nil key="highlightedColor"/>
@@ -5465,7 +5465,7 @@
                                                                 <rect key="frame" x="0.0" y="0.0" width="375" height="68.666666666666671"/>
                                                                 <subviews>
                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="lbl_title" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PwI-Fc-pK2">
-                                                                        <rect key="frame" x="20" y="22" width="335" height="21.666666666666671"/>
+                                                                        <rect key="frame" x="20" y="22.000000000000014" width="335" height="21.666666666666671"/>
                                                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                                                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                         <nil key="highlightedColor"/>
