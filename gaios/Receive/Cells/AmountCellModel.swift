@@ -90,7 +90,7 @@ struct AmountCellModel {
         if isFiat {
             return currency == nil ? defaultCurrency : currency
         } else {
-            if let gdkNetwork = gdkNetwork {
+        if let gdkNetwork = gdkNetwork {
                 return inputDenomination.string(for: gdkNetwork)
             } else {
                 return defaultDenomination
@@ -119,13 +119,13 @@ struct AmountCellModel {
 
     var btc: String? {
         if let satoshi = satoshi {
-            return Balance.fromSatoshi(satoshi, assetId: AssetInfo.btcId)?.toDenom(inputDenomination).0
+            return Balance.fromSatoshi(satoshi, assetId: AssetInfo.btcId)?.toDenom(inputDenomination, locale: false).0
         }
         return nil
     }
     var fiat: String? {
         if let satoshi = satoshi {
-            return Balance.fromSatoshi(satoshi, assetId: AssetInfo.btcId)?.toFiat().0
+            return Balance.fromSatoshi(satoshi, assetId: AssetInfo.btcId)?.toFiat(locale: false).0
         }
         return nil
     }

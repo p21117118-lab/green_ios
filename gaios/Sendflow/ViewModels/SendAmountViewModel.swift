@@ -194,8 +194,8 @@ class SendAmountViewModel {
 
     var walletBalanceDenomText: String? { walletBalance?.toText(denominationType) }
     var walletBalanceFiatText: String? { walletBalance?.toFiatText() }
-    var amountDenomText: String? { amount?.toValue(denominationType).0 }
-    var amountFiatText: String? { amount?.toFiat().0 }
+    var amountDenomText: String? { amount?.toValue(denominationType, locale: false).0 }
+    var amountFiatText: String? { amount?.toFiat(locale: false).0 }
     var subamountDenomText: String? { subamount?.toValue(denominationType).0 }
     var subamountFiatText: String? { subamount?.toFiat().0 }
     var amountSendAllDenomText: String? { amountSendAll?.toValue(denominationType).0 }

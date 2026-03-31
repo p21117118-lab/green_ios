@@ -1,5 +1,6 @@
 import UIKit
 import gdk
+import core
 
 class DialogInputDenominationCell: UITableViewCell {
 
@@ -29,23 +30,12 @@ class DialogInputDenominationCell: UITableViewCell {
         lblTitle.text = self.symbol(denomination, network)
         icon.isHidden = isSelected == false
         lblTitle.textColor = isSelected ? UIColor.gAccent() : .white
-        var hint = ""
         guard let balance = balance else {
             lblHint.text = ""
             return
         }
-
-        switch denomination {
-        case .BTC:
-            hint = balance.btc ?? ""
-        case .MilliBTC:
-            hint = balance.mbtc ?? ""
-        case .MicroBTC, .Bits:
-            hint = balance.bits ?? ""
-        case .Sats:
-            hint = balance.sats ?? ""
-        }
-        lblHint.text = "\(hint) \(self.symbol(denomination, network))"
+        let converter = WalletManager.current?.converter
+        lblHint.text = converter?.formatBTC(balance, denomination: denomination)
     }
 
     func symbol(_ denom: DenominationType, _ network: NetworkSecurityCase) -> String {

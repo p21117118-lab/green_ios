@@ -1,4 +1,6 @@
 import UIKit
+import gdk
+import core
 
 class DialogInputDenominationFooter: UIView {
 
@@ -9,7 +11,7 @@ class DialogInputDenominationFooter: UIView {
     var onTap: (() -> Void)?
 
     func configure(title: String,
-                   hint: String,
+                   balance: Balance?,
                    isSelected: Bool,
                    onTap: (() -> Void)?
     ) {
@@ -18,8 +20,12 @@ class DialogInputDenominationFooter: UIView {
         lblTitle.text = title
         icon.isHidden = isSelected == false
         lblTitle.textColor = isSelected ? UIColor.gAccent() : .white
-        lblHint.text = hint
         self.onTap = onTap
+        lblHint.text = ""
+        if let balance {
+            let converter = WalletManager.current?.converter
+            lblHint.text = converter?.formatFiat(balance)
+        }
     }
 
     @IBAction func btnFiat(_ sender: Any) {

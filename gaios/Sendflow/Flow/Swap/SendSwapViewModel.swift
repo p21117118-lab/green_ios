@@ -276,11 +276,19 @@ final class SendSwapViewModel {
         let list: [DenominationType] = [ .BTC, .MilliBTC, .MicroBTC, .Bits, .Sats]
         let selected = state.denomination
         let network: NetworkSecurityCase = (wm.prominentSession?.gdkNetwork.mainnet ?? true) ? .bitcoinSS : .testnetSS
+        let balance = {
+            switch position {
+            case .from:
+                Balance.fromSatoshi(state.from.amount ?? 0, assetId: state.from.assetId)
+            case .to:
+                Balance.fromSatoshi(state.to.amount ?? 0, assetId: state.to.assetId)
+            }
+        }()
         return DialogInputDenominationViewModel(denomination: selected,
                                                 denominations: list,
                                                 network: network,
                                                 isFiat: state.isFiat,
-                                                balance: nil)
+                                                balance: balance)
     }
     @MainActor
     func performSwap() async {
@@ -333,12 +341,12 @@ final class SendSwapViewModel {
         switch position {
         case .from:
             let satoshi = state.from.amount
-            if let (amount, _) = Balance.fromSatoshi(satoshi ?? 0, assetId: state.from.assetId)?.toValue(newDenom) {
+            if let (amount, _) = Balance.fromSatoshi(satoshi ?? 0, assetId: state.from.assetId)?.toValue(newDenom, locale: false) {
                 amountStr = amount
             }
         case .to:
             let satoshi = state.to.amount
-            if let (amount, _) = Balance.fromSatoshi(satoshi ?? 0, assetId: state.to.assetId)?.toValue(newDenom) {
+            if let (amount, _) = Balance.fromSatoshi(satoshi ?? 0, assetId: state.to.assetId)?.toValue(newDenom, locale: false) {
                 amountStr = amount
             }
         }
@@ -349,12 +357,12 @@ final class SendSwapViewModel {
         switch position {
         case .from:
             let satoshi = state.from.amount
-            if let (amount, _) = Balance.fromSatoshi(satoshi ?? 0, assetId: state.from.assetId)?.toFiat() {
+            if let (amount, _) = Balance.fromSatoshi(satoshi ?? 0, assetId: state.from.assetId)?.toFiat(locale: false) {
                 amountStr = amount
             }
         case .to:
             let satoshi = state.to.amount
-            if let (amount, _) = Balance.fromSatoshi(satoshi ?? 0, assetId: state.to.assetId)?.toFiat() {
+            if let (amount, _) = Balance.fromSatoshi(satoshi ?? 0, assetId: state.to.assetId)?.toFiat(locale: false) {
                 amountStr = amount
             }
         }

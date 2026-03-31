@@ -55,6 +55,7 @@ class DialogInputDenominationViewController: UIViewController {
             self.view.addGestureRecognizer(swipeDown)
         let tapToClose = UITapGestureRecognizer(target: self, action: #selector(didTap))
             tappableBg.addGestureRecognizer(tapToClose)
+            tappableBg.addGestureRecognizer(tapToClose)
 
         obs = tableView.observe(\UITableView.contentSize, options: .new) { [weak self] table, _ in
             self?.tableViewHeight.constant = table.contentSize.height
@@ -169,7 +170,7 @@ extension DialogInputDenominationViewController: UITableViewDelegate, UITableVie
         let fiatCurrency = Balance.fromSatoshi(UInt64(0), assetId: AssetInfo.btcId)?.toFiat().1
         if let fView = Bundle.main.loadNibNamed("DialogInputDenominationFooter", owner: self, options: nil)?.first as? DialogInputDenominationFooter {
             fView.configure(title: fiatCurrency ?? "",
-                            hint: viewModel.balance?.fiat ?? "",
+                            balance: viewModel.balance,
                             isSelected: viewModel.isFiat, onTap: { [weak self] in
                 self?.onFooterTap()
             })

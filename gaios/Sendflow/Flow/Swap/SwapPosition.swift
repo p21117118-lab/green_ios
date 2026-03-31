@@ -77,10 +77,10 @@ extension SwapPositionState {
         }
     }
     func fiat(_ satoshi: Int64, assetId: String) -> String? {
-        return Balance.fromSatoshi(satoshi, assetId: assetId)?.toFiat().0
+        return Balance.fromSatoshi(satoshi, assetId: assetId)?.toFiat(locale: false).0
     }
     func btc(_ satoshi: Int64, assetId: String, denomination: DenominationType) -> String? {
-        return Balance.fromSatoshi(satoshi, assetId: assetId)?.toValue(denomination).0
+        return Balance.fromSatoshi(satoshi, assetId: assetId)?.toValue(denomination, locale: false).0
     }
     func fiatText(_ satoshi: Int64, assetId: String) -> String? {
         return Balance.fromSatoshi(satoshi, assetId: assetId)?.toFiatText()

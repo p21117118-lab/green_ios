@@ -78,8 +78,8 @@ extension Balance {
         }
     }
 
-    func toFiat() -> (String, String) {
-        guard let value = WalletManager.current?.converter?.formatFiat(self, withCurrency: false) else {
+    func toFiat(locale: Bool = true) -> (String, String) {
+        guard let value = WalletManager.current?.converter?.formatFiat(self, withCurrency: false, withGroupSeparator: locale) else {
             if self.assetId == nil {
                 return ("n/a", self.fiatCurrency ?? "")
             }
@@ -88,7 +88,7 @@ extension Balance {
         return (value, self.fiatCurrency ?? "")
     }
 
-    func toDenom(_ denomination: DenominationType? = nil) -> (String, String) {
+    func toDenom(_ denomination: DenominationType? = nil, locale: Bool = true) -> (String, String) {
         let session = WalletManager.current?.prominentSession
         let denomination = denomination ?? session?.settings?.denomination ?? .BTC
         let network: NetworkSecurityCase = {
@@ -100,24 +100,20 @@ extension Balance {
             }
         }()
         let denominationText = denomination.string(for: network.gdkNetwork)
-        let value = WalletManager.current?.converter?.formatBTC(self, denomination: denomination, withDenomination: false)
+        let value = WalletManager.current?.converter?.formatBTC(self, denomination: denomination, withDenomination: false, withGroupSeparator: locale)
         return (value ?? "n/a", denominationText)
     }
 
-    func toBTC() -> (String, String) {
-        toDenom(.BTC)
-    }
-
-    func toAssetValue() -> (String, String) {
-        let value = WalletManager.current?.converter?.formatAsset(self, withTicker: false)
+    func toAssetValue(locale: Bool = true) -> (String, String) {
+        let value = WalletManager.current?.converter?.formatAsset(self, withTicker: false, withGroupSeparator: locale)
         return (value ?? "", self.assetInfo?.ticker ?? "")
     }
 
-    func toValue(_ denomination: DenominationType? = nil) -> (String, String) {
+    func toValue(_ denomination: DenominationType? = nil, locale: Bool = true) -> (String, String) {
         if !Balance.isBtc(assetId) {
-            return toAssetValue()
+            return toAssetValue(locale: locale)
         } else {
-            return toDenom(denomination)
+            return toDenom(denomination, locale: locale)
         }
     }
 
