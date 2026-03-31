@@ -32,6 +32,7 @@ class TxDetailsTotalsCell: UITableViewCell {
 
         lblSumFeeValue.text = model.ntwFees
         lblSumTotalValue.text = model.totalSpent
+        lblSumFeeFiat.text = model.ntwFeesFiat
         lblConversion.text = "≈ " + model.conversion
         lblConversion.isHidden = !AssetInfo.baseIds.contains(model.assetId)
 
@@ -41,7 +42,6 @@ class TxDetailsTotalsCell: UITableViewCell {
                 $0.attributedText =  Common.obfuscate(color: UIColor.gW40(), size: 10, length: 5)
             }
         }
-        lblSumFeeFiat.text = model.ntwFeesFiat
         if model.conversion.isEmpty {
             totalLine.isHidden = true
             [lblSumFeeKey, lblSumFeeValue].forEach {
