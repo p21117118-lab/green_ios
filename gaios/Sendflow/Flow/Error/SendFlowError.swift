@@ -18,7 +18,7 @@ enum SendFlowError: Error, Sendable, Equatable {
     func description() -> String {
         switch self {
         case .noAvailableSubaccounts:
-            return "No available subaccounts"
+            return "id_insufficient_funds"
         case .invalidPaymentTarget:
             return "id_invalid_address"
         case .failedToBuildTransaction:
