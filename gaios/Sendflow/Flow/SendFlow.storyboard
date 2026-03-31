@@ -613,38 +613,49 @@
                                 </subviews>
                             </stackView>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="5hi-Yz-AM7">
-                                <rect key="frame" x="25" y="876" width="343" height="199"/>
+                                <rect key="frame" x="25" y="854" width="343" height="221"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="IUS-2w-QP9">
-                                        <rect key="frame" x="0.0" y="0.0" width="343" height="199"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="343" height="221"/>
                                         <subviews>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kJ6-cV-egB">
-                                                <rect key="frame" x="0.0" y="0.0" width="343" height="50"/>
+                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="bBQ-bZ-i6f">
+                                                <rect key="frame" x="0.0" y="0.0" width="343" height="72"/>
                                                 <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="lbl_fee_title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fnu-Gc-MGB">
-                                                        <rect key="frame" x="0.0" y="0.0" width="76" height="50"/>
-                                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                        <color key="textColor" white="1" alpha="0.40999999999999998" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="lbl_ntw_fee" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CCm-nN-hAX">
-                                                        <rect key="frame" x="268.66666666666669" y="16.666666666666629" width="74.333333333333314" height="17"/>
+                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kJ6-cV-egB">
+                                                        <rect key="frame" x="0.0" y="0.0" width="343" height="50"/>
+                                                        <subviews>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="lbl_fee_title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fnu-Gc-MGB">
+                                                                <rect key="frame" x="0.0" y="0.0" width="76" height="50"/>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                                <color key="textColor" white="1" alpha="0.40999999999999998" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                <nil key="highlightedColor"/>
+                                                            </label>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="lbl_ntw_fee" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CCm-nN-hAX">
+                                                                <rect key="frame" x="268.66666666666669" y="16.666666666666629" width="74.333333333333314" height="17"/>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                                <color key="textColor" white="1" alpha="0.40999999999999998" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                <nil key="highlightedColor"/>
+                                                            </label>
+                                                        </subviews>
+                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="trailing" secondItem="CCm-nN-hAX" secondAttribute="trailing" id="5mN-w6-Qun"/>
+                                                            <constraint firstItem="fnu-Gc-MGB" firstAttribute="top" secondItem="kJ6-cV-egB" secondAttribute="top" id="MuO-3L-Hpa"/>
+                                                            <constraint firstAttribute="bottom" secondItem="fnu-Gc-MGB" secondAttribute="bottom" id="PgT-HJ-PdH"/>
+                                                            <constraint firstItem="CCm-nN-hAX" firstAttribute="centerY" secondItem="kJ6-cV-egB" secondAttribute="centerY" id="s59-Hr-dIz"/>
+                                                            <constraint firstItem="fnu-Gc-MGB" firstAttribute="leading" secondItem="kJ6-cV-egB" secondAttribute="leading" id="u2V-I9-fFA"/>
+                                                        </constraints>
+                                                    </view>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="lbl_conversion" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Zhl-Kj-0A8" userLabel="lbl_fee_fiat">
+                                                        <rect key="frame" x="0.0" y="55" width="343" height="17"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                         <color key="textColor" white="1" alpha="0.40999999999999998" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                 </subviews>
-                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="trailing" secondItem="CCm-nN-hAX" secondAttribute="trailing" id="5mN-w6-Qun"/>
-                                                    <constraint firstItem="fnu-Gc-MGB" firstAttribute="top" secondItem="kJ6-cV-egB" secondAttribute="top" id="MuO-3L-Hpa"/>
-                                                    <constraint firstAttribute="bottom" secondItem="fnu-Gc-MGB" secondAttribute="bottom" id="PgT-HJ-PdH"/>
-                                                    <constraint firstItem="CCm-nN-hAX" firstAttribute="centerY" secondItem="kJ6-cV-egB" secondAttribute="centerY" id="s59-Hr-dIz"/>
-                                                    <constraint firstItem="fnu-Gc-MGB" firstAttribute="leading" secondItem="kJ6-cV-egB" secondAttribute="leading" id="u2V-I9-fFA"/>
-                                                </constraints>
-                                            </view>
+                                            </stackView>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GFN-hg-epW">
-                                                <rect key="frame" x="0.0" y="55" width="343" height="50"/>
+                                                <rect key="frame" x="0.0" y="77" width="343" height="50"/>
                                                 <subviews>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="d3n-9T-2df">
                                                         <rect key="frame" x="0.0" y="0.0" width="132" height="50"/>
@@ -680,7 +691,7 @@
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0kW-0y-I6V">
-                                                <rect key="frame" x="0.0" y="110" width="343" height="12"/>
+                                                <rect key="frame" x="0.0" y="132" width="343" height="12"/>
                                                 <subviews>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YSM-Oj-Mau">
                                                         <rect key="frame" x="0.0" y="3" width="343" height="1"/>
@@ -699,7 +710,7 @@
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZA1-8C-Sqv">
-                                                <rect key="frame" x="0.0" y="127" width="343" height="50"/>
+                                                <rect key="frame" x="0.0" y="149" width="343" height="50"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="lbl_sum_total_key" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QDA-kc-wO4">
                                                         <rect key="frame" x="0.0" y="0.0" width="117.66666666666667" height="50"/>
@@ -724,7 +735,7 @@
                                                 </constraints>
                                             </view>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="lbl_conversion" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BlX-bM-gSO">
-                                                <rect key="frame" x="0.0" y="182" width="343" height="17"/>
+                                                <rect key="frame" x="0.0" y="204" width="343" height="17"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <color key="textColor" white="1" alpha="0.40999999999999998" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
@@ -793,6 +804,7 @@
                         <outlet property="lblAvailable" destination="qts-7x-CMD" id="U7b-sW-JaW"/>
                         <outlet property="lblConversion" destination="BlX-bM-gSO" id="ITn-xl-HNV"/>
                         <outlet property="lblError" destination="Qyk-cE-tIq" id="DgQ-cf-iRC"/>
+                        <outlet property="lblFeeConvert" destination="Zhl-Kj-0A8" id="bMH-e6-Dbs"/>
                         <outlet property="lblFeeRate" destination="Bih-8f-pLx" id="dhC-6l-ZtG"/>
                         <outlet property="lblFeeTitle" destination="fnu-Gc-MGB" id="o3h-WP-CW5"/>
                         <outlet property="lblFiat" destination="iCS-mx-sfO" id="YpO-Nc-6IN"/>
@@ -811,7 +823,7 @@
                         <outlet property="lblWithdrawRangeTitle" destination="5zY-KC-x7w" id="S5r-WD-Wet"/>
                         <outlet property="lblWithdrawTitle" destination="pp1-6N-BKK" id="SsI-oZ-gpS"/>
                         <outlet property="multiAssetCard" destination="bWO-kk-q0o" id="fTd-bL-a5i"/>
-                        <outlet property="neworkFeeView" destination="kJ6-cV-egB" id="aWf-ek-ZAB"/>
+                        <outlet property="networkFeeView" destination="bBQ-bZ-i6f" id="gB9-ul-LFc"/>
                         <outlet property="payRequestStack" destination="V0X-Yu-umO" id="pz4-vM-vM1"/>
                         <outlet property="redepositMultiStack" destination="0kn-z4-3BJ" id="P36-hm-4Ss"/>
                         <outlet property="redepositNoEditView" destination="uhP-Lb-D1X" id="G9R-uP-btU"/>
@@ -4629,7 +4641,7 @@
                                                                                                 <nil key="highlightedColor"/>
                                                                                             </label>
                                                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="lbl_sum_fee_value" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fGg-Cd-bGN">
-                                                                                                <rect key="frame" x="204.33333333333334" y="16.666666666666742" width="120.66666666666666" height="17"/>
+                                                                                                <rect key="frame" x="204.33333333333334" y="16.666666666666629" width="120.66666666666666" height="17"/>
                                                                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                                                                 <color key="textColor" white="1" alpha="0.40999999999999998" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                                                 <nil key="highlightedColor"/>
@@ -4654,7 +4666,7 @@
                                                                                                 <nil key="highlightedColor"/>
                                                                                             </label>
                                                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="lbl_sum_amount_value" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="N3H-lY-ryy">
-                                                                                                <rect key="frame" x="175.66666666666663" y="16.666666666666742" width="149.33333333333337" height="17"/>
+                                                                                                <rect key="frame" x="175.66666666666663" y="16.666666666666629" width="149.33333333333337" height="17"/>
                                                                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                                                                 <color key="textColor" white="1" alpha="0.40999999999999998" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                                                 <nil key="highlightedColor"/>

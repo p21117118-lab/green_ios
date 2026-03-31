@@ -51,7 +51,7 @@ class SendAmountViewController: KeyboardViewController {
     @IBOutlet weak var totalsSeparator: UIView!
     @IBOutlet weak var totalsSumView: UIView!
     @IBOutlet weak var changeSpeedView: UIView!
-    @IBOutlet weak var neworkFeeView: UIView!
+    @IBOutlet weak var networkFeeView: UIView!
 
     @IBOutlet weak var multiAssetCard: UIView!
     @IBOutlet weak var lblMultiAssetTitle: UILabel!
@@ -72,6 +72,7 @@ class SendAmountViewController: KeyboardViewController {
     @IBOutlet weak var lblWithdrawPayTitle: UILabel!
     @IBOutlet weak var withdrawRangeStack: UIStackView!
     @IBOutlet weak var lblWithdrawRangeTitle: UILabel!
+    @IBOutlet weak var lblFeeConvert: UILabel!
 
     var minWithDrawAmount: UInt64 = 1
     var maxWithDrawAmount: UInt64 { withdrawData?.maxWithdrawableSatoshi ?? 0 }
@@ -103,6 +104,7 @@ class SendAmountViewController: KeyboardViewController {
         lblFeeRate.text = ""
         lblTime.text = ""
         lblNtwFee.text = ""
+        lblFeeConvert.text = ""
         lblSumTotalKey.text = "id_total_spent".localized
         lblSumTotalValue.text = ""
         lblError.text = ""
@@ -134,10 +136,10 @@ class SendAmountViewController: KeyboardViewController {
                 $0?.isHidden = true
              }
         }
-        [changeSpeedView, neworkFeeView].forEach {
+        [changeSpeedView, networkFeeView].forEach {
             $0.isHidden = !viewModel.showFeesInTotals
         }
-        [totalsSeparator, totalsSumView].forEach { $0.isHidden = true }
+        [totalsSeparator, totalsSumView, lblConversion].forEach { $0.isHidden = true }
     }
 
     func reloadWithDraw() {
@@ -235,7 +237,7 @@ class SendAmountViewController: KeyboardViewController {
         [lblError, lblMultiError].forEach {
             $0.setStyle(.txt)
         }
-        [lblAvailable, lblFiat, lblFeeTitle, lblNtwFee, lblTime, lblConversion].forEach {
+        [lblAvailable, lblFiat, lblFeeTitle, lblNtwFee, lblTime, lblConversion, lblFeeConvert].forEach {
             $0?.setStyle(.txtCard)
         }
         btnSendall.setStyle(.underline(txt: "id_send_all".localized, color: UIColor.gAccent()))
@@ -485,6 +487,7 @@ class SendAmountViewController: KeyboardViewController {
         lblFeeRate.text = viewModel?.feeRateText ?? ""
         lblTime.text = viewModel?.feeTimeText ?? ""
         lblNtwFee.text = viewModel?.feeText ?? ""
+        lblFeeConvert.text = viewModel?.feeConvertText ?? ""
     }
 
     @objc func triggerTextChange() {

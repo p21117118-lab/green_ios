@@ -230,6 +230,7 @@ class SendAmountViewModel {
     }
     var totalText: String? { isFiat ? totalFiatText : totalDenomText }
     var feeText: String? { isFiat ? feeFiatText : feeDenomText }
+    var feeConvertText: String? { !isFiat ? feeFiatText : feeDenomText }
     var totalWithoutFeeText: String? { isFiat ? totalWithoutFeeFiatText : totalWithoutFeeDenomText }
 
     func dialogInputDenominationViewModel() -> DialogInputDenominationViewModel? {
