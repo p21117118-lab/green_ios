@@ -13,6 +13,7 @@ actor WalletDataModel {
 
     // Private
     private var state = WalletState()
+    private var isFetchingTransactions = false
 
     // Channels
     private var subscribers: [UUID: AsyncStream<SubscriberUpdate>.Continuation] = [:]
@@ -140,25 +141,36 @@ actor WalletDataModel {
         }
     }
     private func performFetchTransactions(reset: Bool) async {
+        if isFetchingTransactions || (!reset && !state.txsCanLoadMore) {
+            return
+        }
+        isFetchingTransactions = true
+        defer { isFetchingTransactions = false }
         do {
             let subaccounts = state.subaccounts
-            let txsGdk = try await fetchGdkTransactions(subaccounts: subaccounts, page: reset ? 0 : state.currentPage, reset: reset, previous: [:])
+            let currentPage = reset ? 0 : state.currentPage
+            let txsCurrentPage = try await wallet.pagedTransactions(subaccounts: subaccounts, of: currentPage)
+            let loadMore = !txsCurrentPage.values.flatMap { $0.list }.isEmpty
+            var cache = reset ? [:] : state.txsGdk ?? [:]
+            for (account, pagetxs) in txsCurrentPage {
+                cache[account] = (cache[account] ?? []) + [pagetxs]
+            }
             let prominentSubaccounts = try? await wallet.prominentSession?.subaccounts().filter({ !$0.hidden })
             let txsMeld = try? await fetchMeldTransactions(prominentSubaccounts?.first)
-            let list = txsGdk
+            var list = cache
                 .flatMap({$0.value})
                 .flatMap({$0.list})
-            let txs = Array(list + (txsMeld ?? []))
-            let filtered = txs
-                .sorted(by: >)
-                .prefix((state.currentPage + 1) * 30)
-            logger.info("WalletDataModel 1tx: \(filtered.first?.hash ?? "")")
+            list = Array(list + (txsMeld ?? []))
+            list = list.sorted(by: >)
+            if loadMore {
+                list = Array(list.prefix((currentPage + 1) * 30))
+            }
             await update(.txs(reset: reset)) {
-                $0.txsGdk = txsGdk
-                $0.txsCanLoadMore = txsGdk.count > 0
+                $0.txsGdk = cache
+                $0.txsCanLoadMore = loadMore
                 $0.txsMeld = txsMeld ?? []
-                $0.txs = (reset ? [] : ($0.txs ?? [])) + Array(filtered)
-                $0.currentPage += 1
+                $0.txs = list
+                $0.currentPage = currentPage + 1
             }
         } catch {
             logger.error("WalletDataModel performFetchTransactions error: \(error.localizedDescription)")
@@ -264,11 +276,11 @@ actor WalletDataModel {
 
     func fetchGdkTransactions(subaccounts: [WalletItem], page: Int, reset: Bool, previous: [String: [Transactions]]) async throws -> [String: [Transactions]] {
         // get gdk/lightning transactions
-        let txs = try await wallet.pagedTransactions(subaccounts: subaccounts, of: reset ? 0 : page)
-        var cache = reset ? [:] : previous
-        for (account, pagetxs) in txs {
-            cache[account] = (cache[account] ?? []) + [pagetxs]
-        }
+                let txs = try await wallet.pagedTransactions(subaccounts: subaccounts, of: reset ? 0 : page)
+                var cache = reset ? [:] : previous
+                for (account, pagetxs) in txs {
+                    cache[account] = (cache[account] ?? []) + [pagetxs]
+                }
         return cache
     }
 
