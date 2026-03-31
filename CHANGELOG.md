@@ -3,7 +3,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## [5.2.2] - 2026-03-31
+## [5.3.0] - 2026-04-07
 
 ### Added
 - Add Jade Core device support
@@ -12,7 +12,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Changed
 - Bump GDK to version 0.77.2
 - Bump LWK to version 0.16.0
-- Bug fixes
+- Added swap ids to transaction details for lockup transactions
+- Improve instructions for Jade Qr mode setup
+- Improve error handling when no account is available to pay an invoice
+
+#### Fixed
+- Fix personal electrum server settings for testnet
+- Trim non significant digits for min and max amount limits in swaps
+- Fix ui glitch in transactions list
+- Fix amount masking in transaction details when hide amounts option enabled
 
 ## [5.2.1] - 2026-03-17
 
