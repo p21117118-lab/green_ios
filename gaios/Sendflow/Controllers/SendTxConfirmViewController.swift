@@ -220,7 +220,7 @@ class SendTxConfirmViewController: UIViewController {
     func reload() {
         updateNavigationItem()
         lblAmountValue.text = viewModel.amountText
-        lblAmountFee.text = viewModel.hasPrice ? "≈ \(viewModel.subamountText ?? "")" : ""
+        lblAmountFee.text = viewModel.hasPrice ? "\(viewModel.subamountText ?? "")" : ""
         lblAssetName.text = viewModel.asset?.name ?? viewModel.assetId
         lblAccount1.text = viewModel.subaccount?.localizedName.uppercased()
         lblAccount2.text = viewModel.subaccount?.type.shortText.uppercased()
@@ -230,7 +230,7 @@ class SendTxConfirmViewController: UIViewController {
         lblSumFeeValue.text = viewModel.feeText
         lblSumFeeFiat.text = viewModel.feeConvertText
         lblSumTotalValue.text = viewModel.totalText
-        lblConversion.text = "≈ \(viewModel?.conversionText ?? "")"
+        lblConversion.text = "\(viewModel?.conversionText ?? "")"
         if viewModel.isAssetWithPrice {
             lblSumTotalValue.text = viewModel.totalFiatForPricedAsset
             lblConversion.isHidden = true

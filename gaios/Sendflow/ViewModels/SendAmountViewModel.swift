@@ -203,7 +203,7 @@ class SendAmountViewModel {
     var totalDenomText: String? { total?.toText(denominationType) }
     var totalFiatText: String? { total?.toFiatText() }
     var feeDenomText: String? { fee?.toText(denominationType) }
-    var feeFiatText: String? { fee?.toFiatText() }
+    var feeFiatText: String? { fee?.toFiatText() == nil ? nil : "≈ \(fee?.toFiatText() ?? "")" }
     var totalWithoutFeeDenom: String? { totalWithoutFee?.toValue(denominationType).0 }
     var totalWithoutFeeFiat: String? { totalWithoutFee?.toFiat().0 }
     var totalWithoutFeeDenomText: String? { totalWithoutFee?.toText(denominationType) }
@@ -220,9 +220,9 @@ class SendAmountViewModel {
     }
     var subamountText: String? {
         if createTx.txType == .sweep || (sendAll && createTx.txType != .redepositExpiredUtxos) {
-            return isFiat ? "\(totalWithoutFeeDenom ?? "") \(denomination ?? "")" : "\(totalWithoutFeeFiat ?? "") \(fiatCurrency ?? "")"
+            return isFiat ? "\(totalWithoutFeeDenom ?? "") \(denomination ?? "")" : "≈ \(totalWithoutFeeFiat ?? "") \(fiatCurrency ?? "")"
         } else {
-            return isFiat ? "\(subamountDenomText ?? "") \(denomination ?? "")" : "\(subamountFiatText ?? "") \(fiatCurrency ?? "")"
+            return isFiat ? "\(subamountDenomText ?? "") \(denomination ?? "")" : "≈ \(subamountFiatText ?? "") \(fiatCurrency ?? "")"
         }
     }
     var conversionText: String? {

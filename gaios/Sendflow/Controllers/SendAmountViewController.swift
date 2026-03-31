@@ -152,7 +152,7 @@ class SendAmountViewController: KeyboardViewController {
         let balance = viewModel.isFiat ? Balance.fromFiat(text, assetId: viewModel.assetId) : Balance.from(text, assetId: viewModel.assetId, denomination: viewModel.denominationType)
 
         viewModel.createTx.satoshi = balance?.satoshi
-        lblFiat.text = "≈ \(viewModel.subamountText ?? "")"
+        lblFiat.text = "\(viewModel.subamountText ?? "")"
         lblConversion.text = "≈ \(viewModel?.conversionText ?? "")"
 
         lblWithdrawRangeTitle.text = String(format: "id_withdraw_limits_s__s".localized, withDrawMinMax.0, withDrawMinMax.1)
@@ -352,7 +352,7 @@ class SendAmountViewController: KeyboardViewController {
     @IBAction func btnClear(_ sender: Any) {
         amountField.text = ""
         viewModel.createTx.satoshi = nil
-        lblFiat.text = "≈ \(viewModel.subamountText ?? "")"
+        lblFiat.text = "\(viewModel.subamountText ?? "")"
         lblConversion.text = "≈ \(viewModel?.conversionText ?? "")"
         Task { [weak self] in
             await self?.validate()
@@ -448,7 +448,7 @@ class SendAmountViewController: KeyboardViewController {
         amountField.isUserInteractionEnabled = viewModel.amountEditable
         btnSendall.isUserInteractionEnabled = viewModel.sendAllEnabled
         amountField.text = viewModel.amountText ?? ""
-        lblFiat.text = "≈ \(viewModel.subamountText ?? "")"
+        lblFiat.text = "\(viewModel.subamountText ?? "")"
         lblConversion.text = "≈ \(viewModel?.conversionText ?? "")"
         if viewModel.sendAll {
             btnClear.isHidden = true
@@ -610,7 +610,7 @@ extension SendAmountViewController {
         }
         let balance = viewModel.isFiat ? Balance.fromFiat(text, assetId: viewModel.assetId) : Balance.from(text, assetId: viewModel.assetId, denomination: viewModel.denominationType)
         viewModel.createTx.satoshi = balance?.satoshi
-        lblFiat.text = "≈ \(viewModel.subamountText ?? "")"
+        lblFiat.text = "\(viewModel.subamountText ?? "")"
         lblConversion.text = "≈ \(viewModel?.conversionText ?? "")"
 
         btnNextEnabled = false

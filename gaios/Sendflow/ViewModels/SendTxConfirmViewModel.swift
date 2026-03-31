@@ -107,11 +107,11 @@ class SendTxConfirmViewModel {
     var totalFiatText: String? { total?.toFiatText() }
 
     var amountText: String? { isFiat ? amountFiatText : amountDenomText }
-    var subamountText: String? { isFiat ? amountDenomText : amountFiatText}
-    var feeText: String? { isFiat ? feeFiatText : feeDenomText }
-    var feeConvertText: String? { !isFiat ? feeFiatText : feeDenomText }
-    var totalText: String? { isFiat ? totalFiatText : totalDenomText }
-    var conversionText: String? { isFiat ? totalDenomText : totalFiatText }
+    var subamountText: String? { isFiat ? amountDenomText : "≈ \(amountFiatText ?? "")"}
+    var feeText: String? { isFiat ? "≈ \(feeFiatText ?? "")" : feeDenomText }
+    var feeConvertText: String? { !isFiat ? "≈ \(feeFiatText ?? "")" : feeDenomText }
+    var totalText: String? { isFiat ? "≈ \(totalFiatText ?? "")" : totalDenomText }
+    var conversionText: String? { isFiat ? totalDenomText : "≈ \(totalFiatText ?? "")" }
     var addressTitle: String { isLightning ? "id_recipient".localized : isConsolitating ? "id_your_redeposit_address".localized : "id_address".localized }
     var amountTitle: String { isWithdraw ? "id_amount_to_receive".localized : isConsolitating ? "id_redepositing".localized : "id_recipient_receives".localized }
     var recipientReceivesHidden: Bool { isConsolitating }
@@ -148,7 +148,7 @@ class SendTxConfirmViewModel {
     var totalFiatForPricedAsset: String {
         if let balance = Balance.fromSatoshi( isWithdraw ? Int64(withdrawAmount) : Int64(satoshi ?? 0), assetId: assetId), let amount = Double(balance.fiat ?? ""), let feeBalance =  Balance.fromSatoshi(transaction?.fee ?? 0, assetId: transaction?.feeAsset ?? "btc"), let fee = Double(feeBalance.fiat ?? ""), let feeCurr = feeBalance.fiatCurrency {
             let totalFiat = amount + fee
-            return "\(String(format: "%.2f", totalFiat)) \(feeCurr)"
+            return "≈ \(String(format: "%.2f", totalFiat)) \(feeCurr)"
         }
         return ""
     }
