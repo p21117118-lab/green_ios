@@ -33,7 +33,7 @@ class DialogAccountsViewModel {
             list += [
                 AccountCellModel(
                     account: account,
-                    satoshi: satohi,
+                    satoshi: satohi ?? 0,
                     assetId: assetId)]
         }
         return list

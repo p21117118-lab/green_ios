@@ -4,7 +4,7 @@ import gdk
 
 struct AccountCellModel {
     var account: WalletItem
-    var satoshi: Int64?
+    var satoshi: Int64
     var assetId: String?
     var name: String { account.localizedName }
     var lblType: String { account.type.path.uppercased() }
@@ -12,18 +12,16 @@ struct AccountCellModel {
     var networkType: NetworkSecurityCase { account.networkType }
     var balanceStr: String? {
         let assetId = assetId ?? account.gdkNetwork.getFeeAsset()
-        if let satoshi = satoshi, let converted = Balance.fromSatoshi(satoshi, assetId: assetId) {
+        if let converted = Balance.fromSatoshi(satoshi, assetId: assetId) {
             let (amount, denom) = converted.toValue()
-            // if satoshi == 0 { return nil }
             return "\(amount) \(denom)"
         }
         return nil
     }
     var fiatStr: String? {
         let assetId = assetId ?? account.gdkNetwork.getFeeAsset()
-        if let satoshi = satoshi, let converted = Balance.fromSatoshi(satoshi, assetId: assetId) {
+        if let converted = Balance.fromSatoshi(satoshi, assetId: assetId) {
             let (amount, denom) = converted.toFiat()
-            // if satoshi == 0 { return nil }
             return "\(amount) \(denom)"
         }
         return nil

@@ -326,7 +326,7 @@ extension ManageAssetViewController: UITableViewDelegate, UITableViewDataSource 
             if let cell, let subaccount {
                 let model = AccountCellModel(
                     account: subaccount,
-                    satoshi: subaccount.satoshi?[viewModel.assetId],
+                    satoshi: subaccount.satoshi?[viewModel.assetId] ?? 0,
                     assetId: viewModel.assetId)
                 cell.configure(
                     model: model,
