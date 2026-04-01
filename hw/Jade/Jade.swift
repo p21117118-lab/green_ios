@@ -75,10 +75,8 @@ public class Jade: JadeCommands, HWProtocol {
             let pointer = path[pathlen - 1]
             // Get receive address from Jade for the path elements given
             var recoveryxpub = recoveryXPub
-            if var recoveryXPub = recoveryXPub, !recoveryXPub.isEmpty {
-                var subactkey = try Wally.bip32KeyFromBase58(recoveryXPub)
-                var branchkey = try Wally.bip32KeyFromParent(hdkey: &subactkey, childNum: branch, flags: Wally.BIP32_FLAG_KEY_PUBLIC | Wally.BIP32_FLAG_SKIP_HASH)
-                recoveryxpub = try Wally.bip32KeyToBase58(key: &branchkey, flags: Wally.BIP32_FLAG_KEY_PUBLIC)
+            if let hdkey = recoveryXPub, !hdkey.isEmpty {
+                recoveryxpub = try Wally.recoveryXpubBranchDerivation(recoveryXpub: hdkey, branch: branch)
             }
             let params = JadeGetReceiveMultisigAddress(network: chain,
                                                     pointer: pointer,

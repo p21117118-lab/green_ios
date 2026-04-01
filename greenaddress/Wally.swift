@@ -22,8 +22,8 @@ public class Wally {
     /*** miniscript-features Miniscript/Descriptor feature flags */
     public static let WALLY_MS_IS_DESCRIPTOR: UInt32 = 0x020 /** Contains only descriptor expressions (no miniscript) */
     
-    public static let BIP32_FLAG_KEY_PUBLIC: UInt32 = Wally.BIP32_FLAG_KEY_PUBLIC
-    public static let BIP32_FLAG_SKIP_HASH: UInt32 = Wally.BIP32_FLAG_SKIP_HASH
+    public static let BIP32_FLAG_KEY_PUBLIC: UInt32 = 0x1
+    public static let BIP32_FLAG_SKIP_HASH: UInt32 = 0x2
     
     public static func sigToDer(sig: [UInt8]) throws -> [UInt8] {
         let sigPtr = UnsafePointer(sig)
@@ -36,7 +36,31 @@ public class Wally {
         // derPtr.deallocate()
         return der
     }
-
+    public static func recoveryXpubBranchDerivation(
+        recoveryXpub: String,
+        branch: UInt32
+    ) throws -> String {
+        var hdkeyPtr: UnsafeMutablePointer<ext_key>?
+        var branchkeyPtr: UnsafeMutablePointer<ext_key>?
+        var base58Ptr: UnsafeMutablePointer<Int8>?
+        guard bip32_key_from_base58_alloc(strdup(recoveryXpub), &hdkeyPtr) == WALLY_OK, let hdkeyPtr else {
+            throw GaError.GenericError()
+        }
+        guard bip32_key_from_parent_alloc(hdkeyPtr, branch, BIP32_FLAG_KEY_PUBLIC | BIP32_FLAG_SKIP_HASH, &branchkeyPtr) == WALLY_OK,
+              let branchkeyPtr else {
+            throw GaError.GenericError()
+        }
+        guard bip32_key_to_base58(branchkeyPtr, BIP32_FLAG_KEY_PUBLIC, &base58Ptr) == WALLY_OK,
+              let base58Ptr else {
+            throw GaError.GenericError()
+        }
+        defer {
+            bip32_key_free(hdkeyPtr)
+            bip32_key_free(branchkeyPtr)
+            wally_free_string(base58Ptr)
+        }
+        return String(cString: base58Ptr)
+    }
     public static func bip32KeyFromParent(
         hdkey: UnsafePointer<ext_key>,
         childNum: UInt32,

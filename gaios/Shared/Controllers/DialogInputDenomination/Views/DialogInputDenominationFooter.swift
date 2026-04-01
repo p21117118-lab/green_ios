@@ -25,7 +25,7 @@ class DialogInputDenominationFooter: UIView {
         if let balance {
             let converter = WalletManager.current?.converter
             lblHint.text = converter?.formatFiat(balance)
-        }
+          }
     }
 
     @IBAction func btnFiat(_ sender: Any) {
