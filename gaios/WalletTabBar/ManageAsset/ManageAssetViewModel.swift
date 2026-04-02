@@ -161,7 +161,9 @@ class ManageAssetViewModel {
         wallet.prominentSession?.settings?.pricing["currency"]
     }
     func canSwap() -> Bool {
-        if mainAccount.isWatchonly || (mainAccount.isHW && mainAccount.boardType == .v2c) {
+        if mainAccount.isWatchonly ||
+            (mainAccount.isHW && mainAccount.boardType == .v2c ||
+             !AssetInfo.baseIds.contains(assetId)) {
             return false
         }
         return true
