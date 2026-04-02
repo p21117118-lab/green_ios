@@ -15,6 +15,7 @@ variables:
   GCS_BUCKET: "green-ios-builds"
   SAST_EXCLUDED_PATHS: "node_modules, .git"
   GITLAB_ADVANCED_SAST_ENABLED: "true"
+  SAST_EXCLUDED_ANALYZERS: "semgrep"
   AST_ENABLE_MR_PIPELINES: "true"
 
 # FORMAT
@@ -137,13 +138,6 @@ gitlab-advanced-sast:
     - test ! -f gl-sast-report.json || chmod 0644 gl-sast-report.json
   artifacts:
     expire_in: 30 days
-
-semgrep-sast:
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-      when: never
-    - if: $CI_COMMIT_BRANCH
-      when: on_success
 
 # UPLOAD
 .distribute: &distribute
