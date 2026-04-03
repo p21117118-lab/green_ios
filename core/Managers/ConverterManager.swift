@@ -11,32 +11,55 @@ public class ConverterManager {
 
     private let provider: ConverterProvider
     private let testnet: Bool
+    private static let enUSLocale = Locale(identifier: "en_US")
 
-    private lazy var fiatFormatter: NumberFormatter = {
+    private let fiatFormatter: NumberFormatter = {
         let formatter = NumberFormatter()
-        formatter.numberStyle = .currency
-        formatter.minimumFractionDigits = 0
+        formatter.numberStyle = .decimal
+        formatter.minimumFractionDigits = 2
         formatter.maximumFractionDigits = 2
         formatter.locale = .current
-        formatter.currencySymbol = "" 
+        formatter.currencySymbol = ""
+        formatter.usesGroupingSeparator = true
+        return formatter
+    }()
+    private let fiatFormatterNoSeparator: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.minimumFractionDigits = 2
+        formatter.maximumFractionDigits = 2
+        formatter.locale = .current
+        formatter.currencySymbol = ""
+        formatter.usesGroupingSeparator = false
         return formatter
     }()
 
-    private lazy var btcFormatter: NumberFormatter = {
+    private let btcFormatter: NumberFormatter = {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
         formatter.minimumFractionDigits = 0
         formatter.maximumFractionDigits = 8
         formatter.locale = .current
+        formatter.usesGroupingSeparator = true
+        return formatter
+    }()
+    private let btcFormatterNoSeparator: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.minimumFractionDigits = 0
+        formatter.maximumFractionDigits = 8
+        formatter.locale = .current
+        formatter.usesGroupingSeparator = false
         return formatter
     }()
 
-    private func assetFormatter(precision: Int) -> NumberFormatter {
+    private func assetFormatter(precision: Int, separator: Bool) -> NumberFormatter {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
         formatter.minimumFractionDigits = 0
         formatter.maximumFractionDigits = precision
         formatter.locale = .current
+        formatter.usesGroupingSeparator = separator
         return formatter
     }
 
@@ -67,31 +90,31 @@ public class ConverterManager {
             return b.sats
         }
     }
- 
+
     // Result as "value currency"
     public func formatFiat(_ b: Balance, withCurrency: Bool = true, withGroupSeparator: Bool = true) -> String? {
-        guard let fiat = b.fiat, let val = Double(fiat) else {
+        guard let fiat = b.fiat,
+              let val = Decimal(string: fiat, locale: Self.enUSLocale) else {
             return nil
         }
-        let formatter = (fiatFormatter.copy() as? NumberFormatter) ?? fiatFormatter
-        formatter.usesGroupingSeparator = withGroupSeparator
-        if !withGroupSeparator {
-            formatter.groupingSeparator = ""
+        let formatter = withGroupSeparator ? fiatFormatter : fiatFormatterNoSeparator
+        guard let number = formatter.string(from: val as NSDecimalNumber) else {
+            return nil
         }
-        if withCurrency {
-            return "\(formatter.string(from: NSNumber(value: val)) ?? "") \(b.fiatCurrency ?? "")"
+        if withCurrency, let fiatCurrency = b.fiatCurrency {
+            return "\(number) \(fiatCurrency)"
         } else {
-            return "\(formatter.string(from: NSNumber(value: val)) ?? "")"
+            return number
         }
     }
     public func formatBTC(_ b: Balance, denomination: DenominationType, withDenomination: Bool = true, withGroupSeparator: Bool = true) -> String? {
-        guard let rawValue = getBtcFromBalance(b, denomination), let val = Double(rawValue) else {
+        guard let value = getBtcFromBalance(b, denomination),
+                let val = Decimal(string: value, locale: Self.enUSLocale) else {
             return nil
         }
-        let formatter = (btcFormatter.copy() as? NumberFormatter) ?? btcFormatter
-        formatter.usesGroupingSeparator = withGroupSeparator
-        if !withGroupSeparator {
-            formatter.groupingSeparator = ""
+        let formatter = withGroupSeparator ? btcFormatter : btcFormatterNoSeparator
+        guard let number = formatter.string(from: val as NSDecimalNumber) else {
+            return nil
         }
         if withDenomination {
             var network = testnet ? NetworkSecurityCase.testnetSS : NetworkSecurityCase.bitcoinSS
@@ -100,24 +123,24 @@ public class ConverterManager {
             }
             let denominations = DenominationType.denominations(for: network.gdkNetwork)
             let denominationText = denominations[denomination]
-            return "\(formatter.string(from: NSNumber(value: val)) ?? "") \(denominationText ?? "")"
+            return "\(number) \(denominationText ?? "")"
         } else {
-            return "\(formatter.string(from: NSNumber(value: val)) ?? "")"
+            return number
         }
     }
     public func formatAsset(_ b: Balance, withTicker: Bool = true, withGroupSeparator: Bool = true) -> String? {
-        guard let assetValue = b.assetValue, let value = Double(assetValue) else {
+        guard let value = b.assetValue,
+                let val = Decimal(string: value, locale: Self.enUSLocale) else {
             return nil
         }
-        let formatter = assetFormatter(precision: Int(b.assetInfo?.precision ?? 8))
-        formatter.usesGroupingSeparator = withGroupSeparator
-        if !withGroupSeparator {
-            formatter.groupingSeparator = ""
+        let formatter = assetFormatter(precision: Int(b.assetInfo?.precision ?? 8), separator: withGroupSeparator)
+        guard let number = formatter.string(from: val as NSDecimalNumber) else {
+            return nil
         }
-        if withTicker {
-            return "\(formatter.string(from: NSNumber(value: value)) ?? "") \(b.assetInfo?.ticker ?? "")"
+        if withTicker, let ticker = b.assetInfo?.ticker {
+            return "\(number) \(ticker)"
         } else {
-            return "\(formatter.string(from: NSNumber(value: value)) ?? "")"
+            return number
         }
     }
 }
