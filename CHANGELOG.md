@@ -10,7 +10,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Add Liquid asset pricing
 
 ### Changed
-- Bump GDK to version 0.77.1
+- Bump GDK to version 0.77.2
 - Bump LWK to version 0.16.0
 - Bug fixes
 
