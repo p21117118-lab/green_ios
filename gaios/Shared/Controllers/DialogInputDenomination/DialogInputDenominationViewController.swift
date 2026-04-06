@@ -39,23 +39,18 @@ class DialogInputDenominationViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
         register()
         setContent()
         setStyle()
-
         view.addSubview(blurredView)
         view.sendSubviewToBack(blurredView)
-
         view.alpha = 0.0
         anchorBottom.constant = -cardView.frame.size.height
-
         let swipeDown = UISwipeGestureRecognizer(target: self, action: #selector(didSwipe))
-            swipeDown.direction = .down
-            self.view.addGestureRecognizer(swipeDown)
+        swipeDown.direction = .down
+        self.view.addGestureRecognizer(swipeDown)
         let tapToClose = UITapGestureRecognizer(target: self, action: #selector(didTap))
-            tappableBg.addGestureRecognizer(tapToClose)
-            tappableBg.addGestureRecognizer(tapToClose)
+        tappableBg.addGestureRecognizer(tapToClose)
 
         obs = tableView.observe(\UITableView.contentSize, options: .new) { [weak self] table, _ in
             self?.tableViewHeight.constant = table.contentSize.height
